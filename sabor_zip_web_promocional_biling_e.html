@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SABOR.ZIP — Programación 5 | ¡Descomprime el sabor!</title>
+
+  <!-- Google Fonts: Fredoka (títulos kawaii redondeados), Nunito (lectura limpia), Space Mono (etiquetas digitales .zip) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Configuración personalizada de Tailwind para nuestra paleta SABOR.ZIP -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFFDF9',
+            espresso: '#3D2314',
+            zipGold: '#FFD166',
+            zipAmber: '#FF9F43',
+            berry: '#D81B60',
+            berryLight: '#EC407A',
+            mint: '#52B788',
+            mintSoft: '#B7E4C7',
+            shrimp: '#FF7B7B',
+            melon: '#FFAD60',
+            skySoft: '#A2D2FF',
+          },
+          fontFamily: {
+            display: ['Fredoka', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* =====================================================================
+       ESTILOS BASE Y PATRÓN SUTIL DE FONDO (PUNTITOS Y DESTELLOS PASTEL)
+       Baja saturación y baja opacidad para mantener limpieza visual total.
+       ===================================================================== */
+    :root {
+      --espresso: #3D2314;
+      --cream: #FFFDF9;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--espresso);
+      background-color: var(--cream);
+      overflow-x: hidden;
+      /* Patrón SVG en línea muy sutil de puntitos pastel y estrellitas de 4 puntas */
+      background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='18' cy='22' r='2.5' fill='%23FFD166' fill-opacity='0.32'/%3E%3Ccircle cx='92' cy='30' r='2' fill='%23A2D2FF' fill-opacity='0.35'/%3E%3Ccircle cx='56' cy='88' r='2.5' fill='%23FF7B7B' fill-opacity='0.24'/%3E%3Ccircle cx='106' cy='98' r='2' fill='%23B7E4C7' fill-opacity='0.45'/%3E%3Cpath d='M64 16 L65.8 21.2 L71 23 L65.8 24.8 L64 30 L62.2 24.8 L57 23 L62.2 21.2 Z' fill='%23EC407A' fill-opacity='0.16'/%3E%3Cpath d='M22 76 L23.5 80.5 L28 82 L23.5 83.5 L22 88 L20.5 83.5 L16 82 L20.5 80.5 Z' fill='%2352B788' fill-opacity='0.18'/%3E%3C/svg%3E");
+      background-size: 120px 120px;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* =====================================================================
+       TARJETAS Y VENTANAS RETRO-KAWAII CON CONTORNO ESPRESSO
+       ===================================================================== */
+    .kawaii-window {
+      background: #FFFFFF;
+      border: 2.5px solid var(--espresso);
+      border-radius: 1.5rem;
+      box-shadow: 0 7px 0 rgba(61, 35, 20, 0.14), 0 14px 28px rgba(61, 35, 20, 0.05);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
+    }
+
+    .kawaii-window-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 11px 0 rgba(61, 35, 20, 0.16), 0 20px 34px rgba(61, 35, 20, 0.08);
+    }
+
+    .kawaii-btn {
+      border: 2.5px solid var(--espresso);
+      box-shadow: 0 4px 0 var(--espresso);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+    }
+
+    .kawaii-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 var(--espresso);
+    }
+
+    .kawaii-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--espresso);
+    }
+
+    .kawaii-pill {
+      border: 2px solid var(--espresso);
+      box-shadow: 0 2.5px 0 rgba(61, 35, 20, 0.16);
+    }
+
+    /* Estilo especial para las notas editables que el usuario completará después */
+    .editable-note-box {
+      border: 2px dashed rgba(216, 27, 96, 0.45);
+      background: linear-gradient(135deg, #FFF9FB 0%, #FFFDF5 100%);
+      border-radius: 1rem;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .editable-note-box.filled {
+      border: 2px solid var(--espresso);
+      background: #FFFFFF;
+      box-shadow: 0 3px 0 rgba(61, 35, 20, 0.1);
+    }
+
+    /* =====================================================================
+       ANIMACIONES SUAVES (FLOTADO, REVELADO EN SCROLL, TRANSICIÓN DE IDIOMA)
+       ===================================================================== */
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1.2deg); }
+    }
+
+    @keyframes floatSlowReverse {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(-2deg); }
+    }
+
+    @keyframes sparklePop {
+      0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
+      70% { opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.1) rotate(var(--rot)); opacity: 0; }
+    }
+
+    .animate-float {
+      animation: floatGentle 4.2s ease-in-out infinite;
+    }
+
+    .animate-float-delayed {
+      animation: floatSlowReverse 4.8s ease-in-out 0.7s infinite;
+    }
+
+    .animate-float-soft {
+      animation: floatGentle 5.4s ease-in-out 1.3s infinite;
+    }
+
+    /* Revelado suave al hacer scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Transición sutil al cambiar de idioma */
+    .lang-fade {
+      transition: opacity 0.18s ease;
+    }
+
+    .lang-switching .lang-fade {
+      opacity: 0.25;
+    }
+
+    /* Partícula de confeti/destello al descomprimir */
+    .unzip-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 90;
+      animation: sparklePop 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Barra de progreso rayada estilo retro-cute */
+    .retro-stripe-bar {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        #FF9F43,
+        #FF9F43 10px,
+        #FFD166 10px,
+        #FFD166 20px
+      );
+      background-size: 28px 28px;
+      animation: moveStripes 0.8s linear infinite;
+    }
+
+    @keyframes moveStripes {
+      from { background-position: 0 0; }
+      to { background-position: 28px 0; }
+    }
+
+    /* Respetar preferencia de movimiento reducido */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-float, .animate-float-delayed, .animate-float-soft, .retro-stripe-bar {
+        animation: none !important;
+      }
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-zipGold/60 selection:text-espresso">
+
+  <!-- =======================================================================
+       BARRA DE NAVEGACIÓN FIJA CON EFECTO CRISTAL Y SELECTOR BILINGÜE ES/EN
+       ======================================================================= -->
+  <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b-2 border-espresso/15">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between gap-3">
+      <!-- Marca / Logo -->
+      <a href="#inicio" class="flex items-center gap-2.5 group focus:outline-none">
+        <span class="w-9 h-9 rounded-xl bg-zipGold border-2 border-espresso flex items-center justify-center shadow-[0_2.5px_0_#3D2314] group-hover:-rotate-6 transition-transform">
+          <span class="font-display font-bold text-xs tracking-tight text-espresso">.zip</span>
+        </span>
+        <div class="leading-tight">
+          <span class="font-display font-bold text-lg sm:text-xl text-espresso tracking-tight block">SABOR.ZIP</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-berry font-bold block -mt-0.5">Programación 5</span>
+        </div>
+      </a>
+
+      <!-- Navegación escritorio -->
+      <nav class="hidden md:flex items-center gap-1.5 font-display text-sm font-semibold">
+        <a href="#aguachile" class="px-3.5 py-2 rounded-xl hover:bg-mintSoft/50 transition-colors lang-fade" data-i18n="nav.aguachile">Aguachile</a>
+        <a href="#frutas" class="px-3.5 py-2 rounded-xl hover:bg-zipGold/40 transition-colors lang-fade" data-i18n="nav.frutas">Cóctel de Frutas</a>
+        <a href="#combo" class="px-3.5 py-2 rounded-xl hover:bg-shrimp/25 transition-colors lang-fade" data-i18n="nav.combo">Combo</a>
+        <a href="#detalles" class="px-3.5 py-2 rounded-xl hover:bg-skySoft/40 transition-colors lang-fade" data-i18n="nav.detalles">Más Detalles</a>
+      </nav>
+
+      <!-- Controles derechos: Toggle ES / EN + Menú móvil -->
+      <div class="flex items-center gap-2">
+        <!-- Selector animado ES / EN -->
+        <button
+          id="langToggleBtn"
+          type="button"
+          aria-label="Cambiar idioma / Switch language"
+          class="relative flex items-center bg-cream border-2 border-espresso rounded-full p-1 shadow-[0_2.5px_0_#3D2314] cursor-pointer select-none"
+        >
+          <span
+            id="langIndicator"
+            class="absolute top-1 left-1 w-10 h-7 rounded-full bg-zipGold border border-espresso/80 transition-transform duration-300 ease-out"
+          ></span>
+          <span id="labelES" class="relative z-10 w-10 h-7 flex items-center justify-center font-mono text-xs font-bold text-espresso">ES</span>
+          <span id="labelEN" class="relative z-10 w-10 h-7 flex items-center justify-center font-mono text-xs font-bold text-espresso/60">EN</span>
+        </button>
+
+        <!-- Botón hamburguesa móvil -->
+        <button
+          id="mobileMenuBtn"
+          type="button"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          class="md:hidden w-10 h-10 rounded-xl bg-white border-2 border-espresso flex items-center justify-center shadow-[0_2.5px_0_#3D2314] active:translate-y-0.5"
+        >
+          <svg class="w-5 h-5 text-espresso" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú desplegable móvil -->
+    <div id="mobileMenu" class="hidden md:hidden border-t-2 border-espresso/10 bg-white/95 backdrop-blur-md px-4 py-3 space-y-1.5">
+      <a href="#aguachile" class="mobile-nav-link block px-4 py-2.5 rounded-xl font-display font-semibold hover:bg-mintSoft/40 lang-fade" data-i18n="nav.aguachile">Aguachile</a>
+      <a href="#frutas" class="mobile-nav-link block px-4 py-2.5 rounded-xl font-display font-semibold hover:bg-zipGold/35 lang-fade" data-i18n="nav.frutas">Cóctel de Frutas</a>
+      <a href="#combo" class="mobile-nav-link block px-4 py-2.5 rounded-xl font-display font-semibold hover:bg-shrimp/20 lang-fade" data-i18n="nav.combo">Combo</a>
+      <a href="#detalles" class="mobile-nav-link block px-4 py-2.5 rounded-xl font-display font-semibold hover:bg-skySoft/35 lang-fade" data-i18n="nav.detalles">Más Detalles</a>
+    </div>
+  </header>
+
+  <main class="flex-1">
+
+    <!-- =====================================================================
+         SECCIÓN HERO — "¡DESCOMPRIME EL SABOR! / UNZIP THE FLAVOR!"
+         ===================================================================== -->
+    <section id="inicio" class="relative pt-8 pb-16 sm:pt-12 sm:pb-24 px-4 sm:px-6 overflow-hidden">
+      <div class="max-w-5xl mx-auto">
+
+        <!-- Ventana Principal estilo OS Retro Kawaii -->
+        <div class="kawaii-window overflow-hidden">
+          <!-- Barra superior de la ventana -->
+          <div class="bg-gradient-to-r from-[#FFF3C4] via-[#FFE5EC] to-[#D8F3DC] border-b-[2.5px] border-espresso px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full bg-shrimp border-2 border-espresso inline-block"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-zipGold border-2 border-espresso inline-block"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-mintSoft border-2 border-espresso inline-block"></span>
+              <span class="ml-2 font-mono text-xs sm:text-sm font-bold text-espresso truncate">sabor.zip — Programación 5</span>
+            </div>
+            <span class="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] font-bold bg-white/80 border border-espresso/30 px-2.5 py-0.5 rounded-full text-espresso">
+              <span class="w-2 h-2 rounded-full bg-mint animate-pulse"></span>
+              <span class="lang-fade" data-i18n="hero.status">100% FRESCO</span>
+            </span>
+          </div>
+
+          <!-- Contenido del Hero -->
+          <div class="relative p-6 sm:p-10 md:p-12 text-center">
+            <!-- Mini ilustraciones decorativas flotantes (escritorio y tablet) -->
+            <!-- Mini Camarón flotante -->
+            <div class="hidden sm:block absolute top-8 left-7 w-14 h-14 animate-float-delayed opacity-95 pointer-events-none" aria-hidden="true">
+              <svg viewBox="0 0 80 80" class="w-full h-full drop-shadow-sm">
+                <path d="M52 22 C30 16, 16 32, 22 50 C26 60, 38 64, 48 58 C42 54, 40 46, 46 42 C54 38, 60 32, 52 22 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M46 57 L58 64 L54 53 Z" fill="#FF6B81" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M24 37 C30 38, 35 37, 38 35" stroke="#3D2314" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <path d="M23 48 C29 48, 34 47, 37 44" stroke="#3D2314" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <circle cx="44" cy="29" r="2.6" fill="#3D2314"/>
+                <circle cx="45" cy="28" r="0.9" fill="#FFFFFF"/>
+                <ellipse cx="49" cy="33" rx="2.5" ry="1.5" fill="#FF4D6D" opacity="0.6"/>
+              </svg>
+            </div>
+
+            <!-- Mini Piña flotante -->
+            <div class="hidden sm:block absolute top-10 right-8 w-14 h-14 animate-float-soft opacity-95 pointer-events-none" aria-hidden="true">
+              <svg viewBox="0 0 80 80" class="w-full h-full drop-shadow-sm">
+                <path d="M40 12 L34 26 L26 18 L31 30 L49 30 L54 18 L46 26 Z" fill="#52B788" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                <ellipse cx="40" cy="49" rx="17" ry="20" fill="#FFD166" stroke="#3D2314" stroke-width="3.5"/>
+                <path d="M29 40 L51 58 M51 40 L29 58" stroke="#F4A261" stroke-width="2" opacity="0.55"/>
+                <circle cx="34" cy="47" r="2.6" fill="#3D2314"/>
+                <circle cx="46" cy="47" r="2.6" fill="#3D2314"/>
+                <path d="M37 52 Q40 55 43 52" stroke="#3D2314" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <ellipse cx="30" cy="51" rx="2.8" ry="1.6" fill="#FF7B7B" opacity="0.65"/>
+                <ellipse cx="50" cy="51" rx="2.8" ry="1.6" fill="#FF7B7B" opacity="0.65"/>
+              </svg>
+            </div>
+
+            <!-- Mini Chile flotante -->
+            <div class="hidden md:block absolute bottom-12 left-12 w-12 h-12 animate-float opacity-95 pointer-events-none" aria-hidden="true">
+              <svg viewBox="0 0 80 80" class="w-full h-full">
+                <path d="M40 18 C38 12, 44 10, 46 13" stroke="#52B788" stroke-width="4" stroke-linecap="round" fill="none"/>
+                <path d="M34 23 C42 20, 48 23, 50 30 C52 44, 46 60, 32 66 C26 68, 25 62, 28 57 C33 48, 30 33, 34 23 Z" fill="#E63946" stroke="#3D2314" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M33 25 C37 22, 43 22, 47 25 L40 20 Z" fill="#52B788" stroke="#3D2314" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="38" cy="41" r="2.3" fill="#3D2314"/>
+                <path d="M44 40 Q46 38 48 40" stroke="#3D2314" stroke-width="2.3" stroke-linecap="round" fill="none"/>
+                <path d="M39 46 Q42 49 45 46" stroke="#3D2314" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+
+            <!-- Mini Tostada redonda flotante -->
+            <div class="hidden md:block absolute bottom-12 right-12 w-14 h-14 animate-float-delayed opacity-95 pointer-events-none" aria-hidden="true">
+              <svg viewBox="0 0 80 80" class="w-full h-full">
+                <circle cx="40" cy="40" r="25" fill="#F4C95D" stroke="#3D2314" stroke-width="3.5"/>
+                <path d="M24 34 Q40 20 56 34 Q48 40 40 36 Q32 40 24 34 Z" fill="#74C69D" stroke="#3D2314" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="32" cy="31" r="3" fill="#FF7B7B"/>
+                <circle cx="47" cy="31" r="3" fill="#FF7B7B"/>
+                <circle cx="34" cy="47" r="2.5" fill="#3D2314"/>
+                <circle cx="46" cy="47" r="2.5" fill="#3D2314"/>
+                <path d="M37 51 Q40 54 43 51" stroke="#3D2314" stroke-width="2.3" stroke-linecap="round" fill="none"/>
+                <ellipse cx="29" cy="50" rx="2.5" ry="1.5" fill="#FF7B7B" opacity="0.6"/>
+                <ellipse cx="51" cy="50" rx="2.5" ry="1.5" fill="#FF7B7B" opacity="0.6"/>
+              </svg>
+            </div>
+
+            <!-- Badge Superior -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zipGold/35 border-2 border-espresso mb-6">
+              <span class="font-mono text-xs font-bold tracking-wide text-espresso lang-fade" data-i18n="hero.badge">📦 ARCHIVO LISTO PARA ABRIR</span>
+            </div>
+
+            <!-- Ilustración SVG Artesanal de la Mascota .ZIP -->
+            <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-5 flex items-center justify-center">
+              <!-- Halo suave detrás del personaje -->
+              <div class="absolute inset-4 rounded-full bg-gradient-to-br from-zipGold/35 via-skySoft/25 to-mintSoft/35 blur-xl"></div>
+              <svg viewBox="0 0 220 220" class="relative w-full h-full animate-float drop-shadow-md" role="img" aria-label="Mascota kawaii SABOR.ZIP">
+                <!-- Destellos sutiles alrededor -->
+                <path d="M24 44 L27 52 L35 55 L27 58 L24 66 L21 58 L13 55 L21 52 Z" fill="#A2D2FF"/>
+                <path d="M194 42 L196.5 48.5 L203 51 L196.5 53.5 L194 60 L191.5 53.5 L185 51 L191.5 48.5 Z" fill="#FF9F43"/>
+                <circle cx="34" cy="166" r="5" fill="#B7E4C7"/>
+                <circle cx="188" cy="158" r="4.5" fill="#FF7B7B" opacity="0.7"/>
+
+                <!-- Sombra inferior -->
+                <ellipse cx="110" cy="194" rx="50" ry="9" fill="#3D2314" opacity="0.12"/>
+
+                <!-- Pies tiernos -->
+                <ellipse cx="82" cy="182" rx="13" ry="9" fill="#FFAD60" stroke="#3D2314" stroke-width="4.5"/>
+                <ellipse cx="138" cy="182" rx="13" ry="9" fill="#FFAD60" stroke="#3D2314" stroke-width="4.5"/>
+
+                <!-- Cuerpo cuadrado redondeado dorado .ZIP -->
+                <rect x="44" y="34" width="132" height="144" rx="34" fill="#FFD166" stroke="#3D2314" stroke-width="5.5"/>
+                <!-- Sombra cálida inferior interna del cuerpo -->
+                <path d="M50 144 C50 165, 65 174, 80 174 L140 174 C155 174, 170 165, 170 144 L170 150 C170 164, 158 175, 142 175 L78 175 C62 175, 50 164, 50 150 Z" fill="#F4A261" opacity="0.45"/>
+                <!-- Puntitos sutiles de textura -->
+                <circle cx="63" cy="60" r="3.5" fill="#F4A261" opacity="0.5"/>
+                <circle cx="158" cy="64" r="3" fill="#F4A261" opacity="0.5"/>
+                <circle cx="154" cy="148" r="3.5" fill="#F4A261" opacity="0.45"/>
+                <circle cx="64" cy="146" r="2.8" fill="#F4A261" opacity="0.45"/>
+
+                <!-- Texto "zip" en la frente -->
+                <text x="110" y="88" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="42" fill="#3D2314" letter-spacing="1">zip</text>
+
+                <!-- Ojos kawaii brillantes -->
+                <circle cx="84" cy="113" r="10.5" fill="#3D2314"/>
+                <circle cx="80.5" cy="109.5" r="3.6" fill="#FFFFFF"/>
+                <circle cx="87.5" cy="116.5" r="1.8" fill="#FFFFFF"/>
+
+                <circle cx="136" cy="113" r="10.5" fill="#3D2314"/>
+                <circle cx="132.5" cy="109.5" r="3.6" fill="#FFFFFF"/>
+                <circle cx="139.5" cy="116.5" r="1.8" fill="#FFFFFF"/>
+
+                <!-- Mejillas sonrojadas -->
+                <ellipse cx="67" cy="124" rx="9" ry="5.5" fill="#FF7B7B" opacity="0.65"/>
+                <ellipse cx="153" cy="124" rx="9" ry="5.5" fill="#FF7B7B" opacity="0.65"/>
+
+                <!-- Boca feliz abierta -->
+                <path d="M99 118 Q110 135 121 118 Z" fill="#D81B60" stroke="#3D2314" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M104 125 Q110 131 116 125 Q110 123 104 125 Z" fill="#FF8FA3"/>
+
+                <!-- Brazos saludando con emoción -->
+                <path d="M62 146 C72 135, 86 140, 82 152" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M158 146 C148 135, 134 140, 138 152" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+
+                <!-- Cierre / Zipper pull tab en el centro inferior -->
+                <rect x="103" y="138" width="14" height="14" rx="3" fill="#E0F7FA" stroke="#3D2314" stroke-width="3.2"/>
+                <path d="M100 150 L120 150 L110 166 Z" fill="#90E0EF" stroke="#3D2314" stroke-width="3.2" stroke-linejoin="round"/>
+                <circle cx="110" cy="145" r="2.2" fill="#3D2314"/>
+              </svg>
+            </div>
+
+            <!-- Título Principal -->
+            <h1 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl tracking-tight text-espresso leading-tight mb-2">
+              <span class="bg-gradient-to-r from-[#FF8A00] via-[#FF5E5B] to-[#D81B60] bg-clip-text text-transparent lang-fade" data-i18n="hero.title">¡Descomprime el sabor!</span>
+            </h1>
+
+            <p class="font-display text-lg sm:text-xl text-berry font-semibold mb-4 lang-fade" data-i18n="hero.subtitle">
+              Tostadas de Aguachile &amp; Cóctel de Frutas Frescas
+            </p>
+
+            <p class="max-w-xl mx-auto text-espresso/80 text-base sm:text-lg leading-relaxed mb-8 lang-fade" data-i18n="hero.desc">
+              Dos mundos deliciosos comprimidos en una experiencia fresca, divertida y lista para disfrutar. Abre el archivo y descubre cada detalle de nuestro menú.
+            </p>
+
+            <!-- Botón CTA Interactivo "Descomprimir sabor" -->
+            <div class="flex flex-col items-center gap-4">
+              <button
+                id="unzipCtaBtn"
+                type="button"
+                class="kawaii-btn bg-zipGold hover:bg-zipAmber text-espresso font-display font-bold text-lg sm:text-xl px-8 py-4 rounded-2xl inline-flex items-center gap-3 cursor-pointer"
+              >
+                <span class="lang-fade" data-i18n="hero.cta">Descomprimir sabor</span>
+                <svg class="w-6 h-6 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+              </button>
+
+              <!-- Barra de progreso de descompresión (aparece / se anima al hacer clic) -->
+              <div id="unzipProgressWrap" class="w-full max-w-md opacity-0 max-h-0 overflow-hidden transition-all duration-300">
+                <div class="bg-cream border-2 border-espresso rounded-2xl p-3.5 mt-2 shadow-[0_3px_0_rgba(61,35,20,0.12)]">
+                  <div class="flex items-center justify-between font-mono text-xs font-bold text-espresso mb-2">
+                    <span id="unzipStatusText" class="lang-fade" data-i18n="hero.loading">Cargando sabor...</span>
+                    <span id="unzipPercentText">0%</span>
+                  </div>
+                  <div class="w-full h-4 bg-white border-2 border-espresso rounded-full overflow-hidden p-0.5">
+                    <div id="unzipProgressBar" class="h-full w-0 rounded-full retro-stripe-bar transition-all duration-100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECCIÓN DEDICADA 1 — TOSTADAS DE AGUACHILE [ aguachile.zip ]
+         ===================================================================== -->
+    <section id="aguachile" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+      <div class="max-w-5xl mx-auto reveal">
+
+        <div class="kawaii-window kawaii-window-hover overflow-hidden">
+          <!-- Encabezado estilo ventana retro -->
+          <div class="bg-[#E8F8EE] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg" aria-hidden="true">📦</span>
+              <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ aguachile.zip ]</span>
+            </div>
+            <span class="font-mono text-xs font-bold px-3 py-1 rounded-full bg-white border-2 border-espresso text-mint lang-fade" data-i18n="aguachile.tag">
+              SALADO &amp; PICOSITO
+            </span>
+          </div>
+
+          <!-- Layout dividido (Split Layout) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 sm:p-10 items-center">
+
+            <!-- Columna Ilustración SVG Artesanal: Tostada REDONDA de Aguachile -->
+            <div class="lg:col-span-5 flex flex-col items-center justify-center">
+              <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+                <!-- Círculo pastel de fondo -->
+                <div class="absolute inset-4 rounded-full bg-gradient-to-tr from-mintSoft/55 via-[#FFF8E7] to-shrimp/20 border-2 border-dashed border-mint/40"></div>
+
+                <svg viewBox="0 0 260 260" class="relative w-full h-full animate-float-soft drop-shadow-md" role="img" aria-label="Ilustración kawaii de Tostada Redonda de Aguachile">
+                  <!-- Destellos sutiles -->
+                  <path d="M26 52 L29 60 L37 63 L29 66 L26 74 L23 66 L15 63 L23 60 Z" fill="#A2D2FF"/>
+                  <path d="M226 42 L228.5 48 L234.5 50.5 L228.5 53 L226 59 L223.5 53 L217.5 50.5 L223.5 48 Z" fill="#FFD166"/>
+                  <circle cx="34" cy="204" r="5" fill="#B7E4C7"/>
+
+                  <!-- Sombra base -->
+                  <ellipse cx="122" cy="218" rx="74" ry="13" fill="#3D2314" opacity="0.11"/>
+
+                  <!-- TOSTADA REDONDA CRUJIENTE (Base circular) -->
+                  <circle cx="122" cy="126" r="82" fill="#F2B857" stroke="#3D2314" stroke-width="5.5"/>
+                  <!-- Borde tostado interior -->
+                  <circle cx="122" cy="126" r="71" fill="#F9D57E" stroke="#E09F3E" stroke-width="2.5" stroke-dasharray="6 5"/>
+                  <!-- Marinado verde fresco de aguachile en el centro -->
+                  <circle cx="122" cy="126" r="64" fill="#B7E4C7" opacity="0.82"/>
+
+                  <!-- Aros de cebolla morada -->
+                  <path d="M78 148 A26 26 0 0 1 110 176" fill="none" stroke="#9D4EDD" stroke-width="5.5" stroke-linecap="round"/>
+                  <path d="M148 78 A24 24 0 0 1 174 106" fill="none" stroke="#9D4EDD" stroke-width="5.5" stroke-linecap="round"/>
+                  <path d="M132 174 A24 24 0 0 0 166 156" fill="none" stroke="#C77DFF" stroke-width="4.5" stroke-linecap="round"/>
+
+                  <!-- Rodajas de pepino fresco (3 piezas) -->
+                  <!-- Pepino 1 (arriba izq) -->
+                  <g transform="translate(76, 94)">
+                    <circle cx="0" cy="0" r="19" fill="#52B788" stroke="#3D2314" stroke-width="3.8"/>
+                    <circle cx="0" cy="0" r="13.5" fill="#D8F3DC"/>
+                    <ellipse cx="-4" cy="-3" rx="2.2" ry="3.5" fill="#95D5B2" transform="rotate(-20)"/>
+                    <ellipse cx="4" cy="-3" rx="2.2" ry="3.5" fill="#95D5B2" transform="rotate(20)"/>
+                    <ellipse cx="0" cy="4.5" rx="2.2" ry="3.2" fill="#95D5B2"/>
+                  </g>
+
+                  <!-- Pepino 2 (arriba der) -->
+                  <g transform="translate(164, 96)">
+                    <circle cx="0" cy="0" r="18" fill="#52B788" stroke="#3D2314" stroke-width="3.8"/>
+                    <circle cx="0" cy="0" r="12.5" fill="#D8F3DC"/>
+                    <ellipse cx="-4" cy="-2" rx="2" ry="3" fill="#95D5B2"/>
+                    <ellipse cx="4" cy="-2" rx="2" ry="3" fill="#95D5B2"/>
+                    <ellipse cx="0" cy="4" rx="2" ry="3" fill="#95D5B2"/>
+                  </g>
+
+                  <!-- Pepino 3 (abajo centro) -->
+                  <g transform="translate(118, 174)">
+                    <circle cx="0" cy="0" r="17" fill="#52B788" stroke="#3D2314" stroke-width="3.8"/>
+                    <circle cx="0" cy="0" r="11.5" fill="#D8F3DC"/>
+                    <ellipse cx="-3.5" cy="-2" rx="2" ry="3" fill="#95D5B2"/>
+                    <ellipse cx="3.5" cy="-2" rx="2" ry="3" fill="#95D5B2"/>
+                    <ellipse cx="0" cy="4" rx="2" ry="2.8" fill="#95D5B2"/>
+                  </g>
+
+                  <!-- Camarones rosados kawaii sobre la tostada (3 camarones) -->
+                  <!-- Camarón 1 (arriba) -->
+                  <g transform="translate(122, 76) rotate(-10)">
+                    <path d="M-24 6 C-22 -14, 14 -16, 22 4 C24 10, 14 14, 9 8 C5 2, -6 2, -10 8 C-14 14, -24 12, -24 6 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="3.8" stroke-linejoin="round"/>
+                    <path d="M-22 6 L-32 12 L-28 -1 Z" fill="#FF6B81" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M-7 -6 L-5 2 M5 -7 L4 2" stroke="#3D2314" stroke-width="2.3" stroke-linecap="round"/>
+                    <circle cx="14" cy="2" r="2.2" fill="#3D2314"/>
+                  </g>
+
+                  <!-- Camarón 2 (abajo izq) -->
+                  <g transform="translate(82, 148) rotate(-120)">
+                    <path d="M-22 5 C-20 -12, 12 -14, 20 4 C22 10, 12 13, 8 7 C4 2, -5 2, -9 7 C-13 13, -22 10, -22 5 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="3.8" stroke-linejoin="round"/>
+                    <path d="M-20 5 L-29 10 L-26 -2 Z" fill="#FF6B81" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M-6 -5 L-4 2 M4 -6 L3 2" stroke="#3D2314" stroke-width="2.2" stroke-linecap="round"/>
+                    <circle cx="12" cy="2" r="2.1" fill="#3D2314"/>
+                  </g>
+
+                  <!-- Camarón 3 (abajo der) -->
+                  <g transform="translate(162, 146) rotate(115)">
+                    <path d="M-22 5 C-20 -12, 12 -14, 20 4 C22 10, 12 13, 8 7 C4 2, -5 2, -9 7 C-13 13, -22 10, -22 5 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="3.8" stroke-linejoin="round"/>
+                    <path d="M-20 5 L-29 10 L-26 -2 Z" fill="#FF6B81" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M-6 -5 L-4 2 M4 -6 L3 2" stroke="#3D2314" stroke-width="2.2" stroke-linecap="round"/>
+                    <circle cx="12" cy="2" r="2.1" fill="#3D2314"/>
+                  </g>
+
+                  <!-- Carita kawaii guiñando en el centro de la tostada -->
+                  <circle cx="109" cy="124" r="6" fill="#3D2314"/>
+                  <circle cx="107" cy="122" r="2.1" fill="#FFFFFF"/>
+                  <!-- Ojo guiñando -->
+                  <path d="M130 124 Q136 118 142 124" fill="none" stroke="#3D2314" stroke-width="4" stroke-linecap="round"/>
+                  <!-- Mejillas -->
+                  <ellipse cx="97" cy="131" rx="6" ry="3.5" fill="#FF7B7B" opacity="0.65"/>
+                  <ellipse cx="147" cy="131" rx="6" ry="3.5" fill="#FF7B7B" opacity="0.65"/>
+                  <!-- Sonrisita -->
+                  <path d="M116 129 Q122 138 128 129 Z" fill="#D81B60" stroke="#3D2314" stroke-width="2.8" stroke-linejoin="round"/>
+
+                  <!-- CHILE ROJO SONRIENTE A UN LADO -->
+                  <g transform="translate(204, 152) rotate(12)">
+                    <path d="M6 -24 C4 -32, 12 -34, 14 -29" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M-6 -18 C6 -22, 16 -18, 18 -6 C21 12, 12 34, -6 42 C-14 45, -17 36, -12 30 C-4 18, -10 -4, -6 -18 Z" fill="#E63946" stroke="#3D2314" stroke-width="4.2" stroke-linejoin="round"/>
+                    <path d="M-7 -15 C0 -20, 10 -20, 16 -14 L5 -22 Z" fill="#52B788" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                    <!-- Carita del chile -->
+                    <circle cx="2" cy="6" r="2.7" fill="#3D2314"/>
+                    <circle cx="1.2" cy="5.2" r="0.9" fill="#FFFFFF"/>
+                    <path d="M9 5 Q12 2.5 14 5" stroke="#3D2314" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                    <path d="M4 12 Q7.5 16 11 12" stroke="#3D2314" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                  </g>
+
+                  <!-- RODAJITA DE LIMÓN FELIZ -->
+                  <g transform="translate(182, 200)">
+                    <circle cx="0" cy="0" r="22" fill="#70A92D" stroke="#3D2314" stroke-width="4"/>
+                    <circle cx="0" cy="0" r="16.5" fill="#D9F99D"/>
+                    <circle cx="0" cy="0" r="13" fill="#BEF264" stroke="#ECFCCB" stroke-width="2"/>
+                    <circle cx="-5.5" cy="-1" r="2.2" fill="#3D2314"/>
+                    <circle cx="5.5" cy="-1" r="2.2" fill="#3D2314"/>
+                    <path d="M-2.5 3.5 Q0 6.5 2.5 3.5" stroke="#3D2314" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="-9" cy="2" rx="2.5" ry="1.4" fill="#FF7B7B" opacity="0.55"/>
+                    <ellipse cx="9" cy="2" rx="2.5" ry="1.4" fill="#FF7B7B" opacity="0.55"/>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Medidor visual de nivel de picante -->
+              <div class="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-cream border-2 border-espresso/20">
+                <span class="font-mono text-xs font-bold text-espresso/75 lang-fade" data-i18n="aguachile.spiceLabel">NIVEL PICANTE:</span>
+                <div class="flex items-center gap-1" aria-label="Nivel de picante medio-alto">
+                  <span class="text-base" title="1">🌶️</span>
+                  <span class="text-base" title="2">🌶️</span>
+                  <span class="text-base" title="3">🌶️</span>
+                  <span class="text-base opacity-25" title="4">🌶️</span>
+                </div>
+                <span class="font-display text-xs font-bold text-berry lang-fade" data-i18n="aguachile.spiceValue">¡Picosito justo!</span>
+              </div>
+            </div>
+
+            <!-- Columna Información del Producto -->
+            <div class="lg:col-span-7 space-y-5">
+              <div>
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-espresso leading-tight lang-fade" data-i18n="aguachile.title">
+                  Tostadas de Aguachile
+                </h2>
+                <p class="font-display font-semibold text-lg sm:text-xl text-berry mt-1 lang-fade" data-i18n="aguachile.subtitle">
+                  🍤 ¡Fresco y picosito!
+                </p>
+              </div>
+
+              <p class="text-espresso/80 text-base leading-relaxed lang-fade" data-i18n="aguachile.desc">
+                Crujientes tostadas redondas preparadas al momento con camarón fresco marinado en jugo de limón, rodajas de pepino crujiente, cebolla morada y ese toque picosito de chile que despierta todos tus sentidos.
+              </p>
+
+              <!-- Etiquetas visuales de ingredientes -->
+              <div>
+                <p class="font-mono text-xs font-bold uppercase tracking-wider text-espresso/60 mb-2.5 lang-fade" data-i18n="common.ingredients">
+                  Ingredientes incluidos:
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFE8EC] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🍤</span><span class="lang-fade" data-i18n="ing.shrimp">Camarón</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E8F8EE] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🥒</span><span class="lang-fade" data-i18n="ing.cucumber">Pepino</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFE5E5] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🌶️</span><span class="lang-fade" data-i18n="ing.chili">Chile</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F2FCE2] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🍋</span><span class="lang-fade" data-i18n="ing.lime">Limón</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFF4D6] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🫓</span><span class="lang-fade" data-i18n="ing.tostada">Tostada redonda</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Bloques Editables (Precio, Porción, Notas extra) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div class="editable-note-box p-3.5" data-editable-box="aguachilePrice">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.price">Precio</span>
+                  </div>
+                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="aguachilePrice"></p>
+                </div>
+
+                <div class="editable-note-box p-3.5" data-editable-box="aguachilePortion">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.portion">Porción</span>
+                  </div>
+                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="aguachilePortion"></p>
+                </div>
+
+                <div class="editable-note-box p-3.5 sm:col-span-2" data-editable-box="aguachileNotes">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.extraNotes">Notas adicionales / Salsas</span>
+                  </div>
+                  <p class="font-body font-semibold text-sm text-espresso/80 lang-fade" data-editable-field="aguachileNotes"></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECCIÓN DEDICADA 2 — CÓCTEL DE FRUTAS [ frutas.zip ]
+         ===================================================================== -->
+    <section id="frutas" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+      <div class="max-w-5xl mx-auto reveal">
+
+        <div class="kawaii-window kawaii-window-hover overflow-hidden">
+          <!-- Encabezado estilo ventana retro -->
+          <div class="bg-[#FFF4D6] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg" aria-hidden="true">📦</span>
+              <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ frutas.zip ]</span>
+            </div>
+            <span class="font-mono text-xs font-bold px-3 py-1 rounded-full bg-white border-2 border-espresso text-zipAmber lang-fade" data-i18n="frutas.tag">
+              DULCE &amp; REFRESCANTE
+            </span>
+          </div>
+
+          <!-- Layout dividido invertido (imagen a la derecha en escritorio, arriba en móvil) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 sm:p-10 items-center">
+
+            <!-- Columna Información del Producto (orden 2 en móvil, orden 1 en escritorio) -->
+            <div class="lg:col-span-7 order-2 lg:order-1 space-y-5">
+              <div>
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-espresso leading-tight lang-fade" data-i18n="frutas.title">
+                  Cóctel de Frutas
+                </h2>
+                <p class="font-display font-semibold text-lg sm:text-xl text-berry mt-1 lang-fade" data-i18n="frutas.subtitle">
+                  🍍 ¡Dulce y refrescante!
+                </p>
+              </div>
+
+              <p class="text-espresso/80 text-base leading-relaxed lang-fade" data-i18n="frutas.desc">
+                Una explosión natural de dulzura y frescura servida en nuestro práctico vasito blanco. Mezcla seleccionada de sandía jugosa, melón dulce y piña tropical cortados al día para refrescarte a cualquier hora.
+              </p>
+
+              <!-- Etiquetas visuales de frutas (STRICTAMENTE SOLO sandía, melón y piña — SIN pepino) -->
+              <div>
+                <p class="font-mono text-xs font-bold uppercase tracking-wider text-espresso/60 mb-2.5 lang-fade" data-i18n="common.fruitsIncluded">
+                  Frutas frescas incluidas:
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FFE5EC] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🍉</span><span class="lang-fade" data-i18n="ing.watermelon">Sandía</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FFF0DB] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🍈</span><span class="lang-fade" data-i18n="ing.melon">Melón</span>
+                  </span>
+                  <span class="kawaii-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FFF6CC] text-xs sm:text-sm font-bold text-espresso">
+                    <span>🍍</span><span class="lang-fade" data-i18n="ing.pineapple">Piña</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Bloques Editables (Precio, Tamaño del vaso, Toppings opcionales) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div class="editable-note-box p-3.5" data-editable-box="frutasPrice">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.price">Precio</span>
+                  </div>
+                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="frutasPrice"></p>
+                </div>
+
+                <div class="editable-note-box p-3.5" data-editable-box="frutasSize">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.cupSize">Tamaño del vaso</span>
+                  </div>
+                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="frutasSize"></p>
+                </div>
+
+                <div class="editable-note-box p-3.5 sm:col-span-2" data-editable-box="frutasToppings">
+                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                    <span aria-hidden="true">✏️</span>
+                    <span class="lang-fade" data-i18n="labels.toppings">Toppings opcionales</span>
+                  </div>
+                  <p class="font-body font-semibold text-sm text-espresso/80 lang-fade" data-editable-field="frutasToppings"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Columna Ilustración SVG Artesanal: VASO BLANCO CHIQUITO Y GORDITO (Solo sandía, melón y piña + cuchara) -->
+            <div class="lg:col-span-5 order-1 lg:order-2 flex flex-col items-center justify-center">
+              <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+                <!-- Círculo pastel de fondo -->
+                <div class="absolute inset-4 rounded-full bg-gradient-to-br from-[#FFF4D6] via-[#FFF0F3] to-skySoft/30 border-2 border-dashed border-zipAmber/45"></div>
+
+                <svg viewBox="0 0 260 260" class="relative w-full h-full animate-float-delayed drop-shadow-md" role="img" aria-label="Ilustración kawaii de Vaso Blanco Chaparrito con Cóctel de Frutas: Sandía, Melón y Piña">
+                  <!-- Destellos sutiles -->
+                  <path d="M36 62 L39 70 L47 73 L39 76 L36 84 L33 76 L25 73 L33 70 Z" fill="#FFAD60"/>
+                  <path d="M222 68 L224.5 74 L230.5 76.5 L224.5 79 L222 85 L219.5 79 L213.5 76.5 L219.5 74 Z" fill="#A2D2FF"/>
+                  <circle cx="44" cy="196" r="5" fill="#FF7B7B" opacity="0.55"/>
+
+                  <!-- Sombra base -->
+                  <ellipse cx="126" cy="222" rx="64" ry="11" fill="#3D2314" opacity="0.11"/>
+
+                  <!-- CUCHARITA KAWAII ASOMÁNDOSE A LA DERECHA -->
+                  <g transform="translate(185, 114) rotate(22)">
+                    <rect x="-4" y="8" width="8" height="44" rx="4" fill="#E9ECEF" stroke="#3D2314" stroke-width="3.8"/>
+                    <ellipse cx="0" cy="-6" rx="14" ry="18" fill="#F8F9FA" stroke="#3D2314" stroke-width="4"/>
+                    <ellipse cx="-3" cy="-11" rx="4" ry="6" fill="#FFFFFF"/>
+                    <!-- Carita en la cuchara -->
+                    <circle cx="-4" cy="-6" r="1.9" fill="#3D2314"/>
+                    <circle cx="4" cy="-6" r="1.9" fill="#3D2314"/>
+                    <path d="M-2 -2 Q0 0.5 2 -2" stroke="#3D2314" stroke-width="2" stroke-linecap="round" fill="none"/>
+                  </g>
+
+                  <!-- FRUTA 1: PIÑA SONRIENTE (Centro atrás) -->
+                  <g transform="translate(126, 98)">
+                    <!-- Corona verde -->
+                    <path d="M0 -48 L-8 -28 L-20 -38 L-12 -22 L12 -22 L20 -38 L8 -28 Z" fill="#52B788" stroke="#3D2314" stroke-width="3.8" stroke-linejoin="round"/>
+                    <!-- Cuerpo piña -->
+                    <ellipse cx="0" cy="4" rx="25" ry="29" fill="#FFD166" stroke="#3D2314" stroke-width="4.2"/>
+                    <path d="M-15 -10 L15 16 M15 -10 L-15 16" stroke="#F4A261" stroke-width="2.2" opacity="0.5"/>
+                    <!-- Carita piña -->
+                    <circle cx="-8" cy="1" r="2.8" fill="#3D2314"/>
+                    <circle cx="8" cy="1" r="2.8" fill="#3D2314"/>
+                    <path d="M-3.5 6 Q0 9.5 3.5 6" stroke="#3D2314" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="-13" cy="5" rx="3" ry="1.8" fill="#FF7B7B" opacity="0.6"/>
+                    <ellipse cx="13" cy="5" rx="3" ry="1.8" fill="#FF7B7B" opacity="0.6"/>
+                  </g>
+
+                  <!-- FRUTA 2: SANDÍA SONRIENTE (Izquierda) -->
+                  <g transform="translate(86, 114) rotate(-14)">
+                    <!-- Triángulo de sandía roja -->
+                    <path d="M0 -34 L28 22 Q0 30 -28 22 Z" fill="#FF4D6D" stroke="#3D2314" stroke-width="4.2" stroke-linejoin="round"/>
+                    <!-- Borde blanco + cáscara verde -->
+                    <path d="M-26 19 Q0 27 26 19" fill="none" stroke="#F8F9FA" stroke-width="4"/>
+                    <path d="M-28 22 Q0 31 28 22" fill="none" stroke="#52B788" stroke-width="5.5" stroke-linecap="round"/>
+                    <!-- Semillitas -->
+                    <ellipse cx="-9" cy="-4" rx="1.6" ry="2.6" fill="#3D2314"/>
+                    <ellipse cx="9" cy="-6" rx="1.6" ry="2.6" fill="#3D2314"/>
+                    <ellipse cx="0" cy="-16" rx="1.5" ry="2.4" fill="#3D2314"/>
+                    <!-- Carita sandía -->
+                    <circle cx="-7" cy="7" r="2.4" fill="#3D2314"/>
+                    <circle cx="7" cy="7" r="2.4" fill="#3D2314"/>
+                    <path d="M-3 11 Q0 14 3 11" stroke="#3D2314" stroke-width="2.3" stroke-linecap="round" fill="none"/>
+                  </g>
+
+                  <!-- FRUTA 3: MELÓN ANARANJADO SONRIENTE (Derecha) -->
+                  <g transform="translate(154, 122) rotate(12)">
+                    <!-- Media luna de melón -->
+                    <path d="M-32 -2 Q0 28 32 -2 Q16 -14 0 -6 Q-16 -14 -32 -2 Z" fill="#FFAD60" stroke="#3D2314" stroke-width="4.2" stroke-linejoin="round"/>
+                    <!-- Cáscara suave verde/crema en la base -->
+                    <path d="M-30 0 Q0 26 30 0" fill="none" stroke="#80B918" stroke-width="5" stroke-linecap="round"/>
+                    <!-- Pulpa interior -->
+                    <path d="M-24 -2 Q0 18 24 -2 Q12 -9 0 -3 Q-12 -9 -24 -2 Z" fill="#FF9F43"/>
+                    <!-- Carita melón -->
+                    <circle cx="-7" cy="2" r="2.4" fill="#3D2314"/>
+                    <circle cx="7" cy="2" r="2.4" fill="#3D2314"/>
+                    <path d="M-3 6 Q0 9 3 6" stroke="#3D2314" stroke-width="2.3" stroke-linecap="round" fill="none"/>
+                  </g>
+
+                  <!-- VASO BLANCO DESECHABLE CHIQUITO Y GORDITO (Proporciones chaparritas y tiernas) -->
+                  <!-- Cuerpo principal del vaso blanco -->
+                  <path d="M58 134 L70 206 C73 216, 179 216, 182 206 L194 134 Z" fill="#FFFFFF" stroke="#3D2314" stroke-width="5.2" stroke-linejoin="round"/>
+                  <!-- Sombra gris-azulada súper suave en el lado derecho e inferior del vaso blanco -->
+                  <path d="M168 138 L158 208 C170 207, 178 205, 180 200 L190 138 Z" fill="#E9ECEF"/>
+                  <path d="M72 202 C90 212, 162 212, 180 202 L178 208 C160 215, 92 215, 74 208 Z" fill="#DEE2E6"/>
+
+                  <!-- Borde/Labio redondeado superior del vaso blanco -->
+                  <rect x="50" y="124" width="152" height="17" rx="8.5" fill="#FFFFFF" stroke="#3D2314" stroke-width="5"/>
+                  <line x1="62" y1="132" x2="112" y2="132" stroke="#E9ECEF" stroke-width="3" stroke-linecap="round"/>
+
+                  <!-- Carita kawaii súper adorable en el vaso blanco -->
+                  <circle cx="102" cy="172" r="7.5" fill="#3D2314"/>
+                  <circle cx="99.5" cy="169.5" r="2.6" fill="#FFFFFF"/>
+                  <circle cx="150" cy="172" r="7.5" fill="#3D2314"/>
+                  <circle cx="147.5" cy="169.5" r="2.6" fill="#FFFFFF"/>
+                  <!-- Mejillas rosadas -->
+                  <ellipse cx="87" cy="180" rx="7.5" ry="4.5" fill="#FF7B7B" opacity="0.6"/>
+                  <ellipse cx="165" cy="180" rx="7.5" ry="4.5" fill="#FF7B7B" opacity="0.6"/>
+                  <!-- Boca feliz -->
+                  <path d="M117 176 Q126 190 135 176 Z" fill="#D81B60" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
+                  <path d="M121 182 Q126 186 131 182 Z" fill="#FF8FA3"/>
+                </svg>
+              </div>
+
+              <!-- Medidor visual de frescura y dulzura -->
+              <div class="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-cream border-2 border-espresso/20">
+                <span class="font-mono text-xs font-bold text-espresso/75 lang-fade" data-i18n="frutas.freshLabel">FRESCURA:</span>
+                <div class="flex items-center gap-1" aria-label="Frescura al máximo">
+                  <span>✨</span><span>✨</span><span>✨</span><span>✨</span>
+                </div>
+                <span class="font-display text-xs font-bold text-mint lang-fade" data-i18n="frutas.freshValue">100% Natural</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECCIÓN DESTACADA 3 — EL COMBO PERFECTO [ combo.zip ]
+         + ARMADOR / VISTA PREVIA INTERACTIVA DE ARCHIVO DE SABOR
+         ===================================================================== -->
+    <section id="combo" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+      <div class="max-w-5xl mx-auto reveal">
+
+        <div class="kawaii-window overflow-hidden bg-gradient-to-br from-white via-[#FFFDF5] to-[#FFF5F8]">
+          <!-- Encabezado ventana combo.zip -->
+          <div class="bg-gradient-to-r from-[#FFE5EC] via-[#FFF3C4] to-[#E0F2FE] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg" aria-hidden="true">⚡</span>
+              <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ combo.zip ]</span>
+            </div>
+            <span class="font-mono text-xs font-bold px-3 py-1 rounded-full bg-berry text-white border-2 border-espresso lang-fade" data-i18n="combo.badge">
+              ★ EL FAVORITO
+            </span>
+          </div>
+
+          <div class="p-6 sm:p-10">
+            <!-- Fila superior: Ilustración combinada + descripción y precio editable -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+              <!-- Mini ilustración pareada: Tostada Redonda + Vasito Blanco celebrando juntos -->
+              <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-64 h-52 sm:w-72 sm:h-56 flex items-center justify-center">
+                  <svg viewBox="0 0 280 210" class="w-full h-full animate-float drop-shadow-md" role="img" aria-label="Tostada de Aguachile y Vasito de Frutas celebrando juntos">
+                    <!-- Estrellita de choque de manos en el centro -->
+                    <path d="M140 42 L144 54 L156 58 L144 62 L140 74 L136 62 L124 58 L136 54 Z" fill="#FFD166" stroke="#3D2314" stroke-width="2.5" stroke-linejoin="round"/>
+                    <line x1="120" y1="36" x2="127" y2="45" stroke="#FF7B7B" stroke-width="3.5" stroke-linecap="round"/>
+                    <line x1="160" y1="36" x2="153" y2="45" stroke="#52B788" stroke-width="3.5" stroke-linecap="round"/>
+
+                    <!-- Sombra compartida -->
+                    <ellipse cx="140" cy="192" rx="102" ry="11" fill="#3D2314" opacity="0.11"/>
+
+                    <!-- PERSONAJE IZQUIERDO: Mini Tostada Redonda -->
+                    <g transform="translate(80, 128)">
+                      <!-- Pies -->
+                      <ellipse cx="-14" cy="54" rx="8" ry="6" fill="#FFAD60" stroke="#3D2314" stroke-width="3.5"/>
+                      <ellipse cx="14" cy="54" rx="8" ry="6" fill="#FFAD60" stroke="#3D2314" stroke-width="3.5"/>
+                      <!-- Brazo izq y brazo der arriba -->
+                      <path d="M-46 6 C-56 0, -58 -10, -50 -14" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+                      <path d="M40 -10 C50 -24, 56 -34, 58 -40" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+                      <!-- Cuerpo tostada redonda -->
+                      <circle cx="0" cy="0" r="48" fill="#F2B857" stroke="#3D2314" stroke-width="4.5"/>
+                      <circle cx="0" cy="0" r="39" fill="#B7E4C7"/>
+                      <!-- Mini pepinos y camarones -->
+                      <circle cx="-20" cy="-18" r="10" fill="#52B788" stroke="#3D2314" stroke-width="2.8"/>
+                      <circle cx="-20" cy="-18" r="6" fill="#D8F3DC"/>
+                      <circle cx="22" cy="-16" r="10" fill="#52B788" stroke="#3D2314" stroke-width="2.8"/>
+                      <circle cx="22" cy="-16" r="6" fill="#D8F3DC"/>
+                      <path d="M-12 -28 C-4 -36, 12 -34, 14 -24 C10 -20, -4 -20, -12 -28 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="2.8"/>
+                      <path d="M12 18 C22 14, 28 24, 20 30 C12 32, 8 24, 12 18 Z" fill="#FF8FA3" stroke="#3D2314" stroke-width="2.8"/>
+                      <!-- Carita feliz -->
+                      <circle cx="-11" cy="2" r="4.5" fill="#3D2314"/>
+                      <circle cx="-12.5" cy="0.5" r="1.5" fill="#FFFFFF"/>
+                      <circle cx="11" cy="2" r="4.5" fill="#3D2314"/>
+                      <circle cx="9.5" cy="0.5" r="1.5" fill="#FFFFFF"/>
+                      <path d="M-6 9 Q0 17 6 9 Z" fill="#D81B60" stroke="#3D2314" stroke-width="2.5"/>
+                    </g>
+
+                    <!-- PERSONAJE DERECHO: Mini Vaso Blanco Chaparrito -->
+                    <g transform="translate(198, 132)">
+                      <!-- Pies -->
+                      <ellipse cx="-14" cy="50" rx="8" ry="6" fill="#FFAD60" stroke="#3D2314" stroke-width="3.5"/>
+                      <ellipse cx="14" cy="50" rx="8" ry="6" fill="#FFAD60" stroke="#3D2314" stroke-width="3.5"/>
+                      <!-- Brazos -->
+                      <path d="M-38 -8 C-48 -24, -54 -34, -56 -42" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+                      <path d="M38 0 C50 -6, 54 -14, 48 -20" fill="none" stroke="#3D2314" stroke-width="4.5" stroke-linecap="round"/>
+                      <!-- Mini frutas arriba: piña, sandía y melón (SIN pepino) -->
+                      <path d="M0 -64 L-6 -48 L-14 -54 L-8 -44 L8 -44 L14 -54 L6 -48 Z" fill="#52B788" stroke="#3D2314" stroke-width="2.8"/>
+                      <ellipse cx="0" cy="-30" rx="16" ry="18" fill="#FFD166" stroke="#3D2314" stroke-width="3.2"/>
+                      <path d="M-24 -44 L-6 -12 L-38 -14 Z" fill="#FF4D6D" stroke="#3D2314" stroke-width="3.2" stroke-linejoin="round"/>
+                      <path d="M2 -16 Q22 2 38 -18 Q20 -26 2 -16 Z" fill="#FFAD60" stroke="#3D2314" stroke-width="3.2" stroke-linejoin="round"/>
+                      <!-- Vasito blanco gordito -->
+                      <path d="M-40 -14 L-32 42 C-30 48, 30 48, 32 42 L40 -14 Z" fill="#FFFFFF" stroke="#3D2314" stroke-width="4.2"/>
+                      <rect x="-45" y="-22" width="90" height="12" rx="6" fill="#FFFFFF" stroke="#3D2314" stroke-width="4"/>
+                      <!-- Carita guiñando -->
+                      <circle cx="-12" cy="14" r="4.5" fill="#3D2314"/>
+                      <circle cx="-13.5" cy="12.5" r="1.5" fill="#FFFFFF"/>
+                      <path d="M8 14 Q13 9 18 14" fill="none" stroke="#3D2314" stroke-width="3.2" stroke-linecap="round"/>
+                      <path d="M-5 20 Q0 27 5 20 Z" fill="#D81B60" stroke="#3D2314" stroke-width="2.4"/>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Descripción y bloques editables del Combo -->
+              <div class="lg:col-span-7 space-y-4">
+                <div>
+                  <h2 class="font-display font-bold text-3xl sm:text-4xl text-espresso leading-tight lang-fade" data-i18n="combo.title">
+                    El Combo Perfecto
+                  </h2>
+                  <p class="font-display font-semibold text-lg sm:text-xl text-berry mt-1 lang-fade" data-i18n="combo.subtitle">
+                    💥 ¡Lo mejor de dos mundos!
+                  </p>
+                </div>
+
+                <p class="text-espresso/80 text-base leading-relaxed lang-fade" data-i18n="combo.desc">
+                  ¿No sabes si elegir algo picosito o algo dulce? Llévate ambos en un solo paquete: el crunch fresco de nuestras Tostadas de Aguachile acompañado de la dulzura refrescante del Cóctel de Frutas.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div class="editable-note-box p-3.5" data-editable-box="comboPrice">
+                    <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                      <span aria-hidden="true">✏️</span>
+                      <span class="lang-fade" data-i18n="labels.comboPrice">Precio del Combo</span>
+                    </div>
+                    <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="comboPrice"></p>
+                  </div>
+
+                  <div class="editable-note-box p-3.5" data-editable-box="comboPromo">
+                    <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
+                      <span aria-hidden="true">✏️</span>
+                      <span class="lang-fade" data-i18n="labels.promo">Promoción / Incluye</span>
+                    </div>
+                    <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="comboPromo"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ARMADOR / VISTA PREVIA INTERACTIVA DE ARCHIVO DE SABOR -->
+            <div class="mt-10 pt-8 border-t-2 border-dashed border-espresso/20">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                <div>
+                  <h3 class="font-display font-bold text-xl text-espresso flex items-center gap-2">
+                    <span>🖥️</span>
+                    <span class="lang-fade" data-i18n="builder.title">Vista Previa de tu Archivo .ZIP</span>
+                  </h3>
+                  <p class="text-sm text-espresso/70 lang-fade" data-i18n="builder.subtitle">
+                    Selecciona qué quieres descomprimir hoy para ver los detalles de tu paquete:
+                  </p>
+                </div>
+                <span class="font-mono text-xs font-bold text-mint bg-mintSoft/35 border border-espresso/30 px-3 py-1 rounded-full self-start sm:self-auto lang-fade" data-i18n="builder.interactive">
+                  INTERACTIVO
+                </span>
+              </div>
+
+              <!-- Botones selectores -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5" role="tablist" aria-label="Selector de paquete de sabor">
+                <button
+                  type="button"
+                  data-pack="aguachile"
+                  class="pack-tab kawaii-btn bg-white text-espresso px-4 py-3 rounded-2xl text-left flex items-center justify-between gap-2 cursor-pointer"
+                >
+                  <div>
+                    <span class="font-mono text-xs font-bold block text-mint">aguachile.zip</span>
+                    <span class="font-display font-bold text-base lang-fade" data-i18n="builder.optAguachile">Solo Aguachile</span>
+                  </div>
+                  <span class="text-2xl" aria-hidden="true">🍤</span>
+                </button>
+
+                <button
+                  type="button"
+                  data-pack="frutas"
+                  class="pack-tab kawaii-btn bg-white text-espresso px-4 py-3 rounded-2xl text-left flex items-center justify-between gap-2 cursor-pointer"
+                >
+                  <div>
+                    <span class="font-mono text-xs font-bold block text-zipAmber">frutas.zip</span>
+                    <span class="font-display font-bold text-base lang-fade" data-i18n="builder.optFrutas">Solo Frutas</span>
+                  </div>
+                  <span class="text-2xl" aria-hidden="true">🍍</span>
+                </button>
+
+                <button
+                  type="button"
+                  data-pack="combo"
+                  class="pack-tab kawaii-btn bg-zipGold text-espresso px-4 py-3 rounded-2xl text-left flex items-center justify-between gap-2 cursor-pointer"
+                >
+                  <div>
+                    <span class="font-mono text-xs font-bold block text-berry">combo.zip</span>
+                    <span class="font-display font-bold text-base lang-fade" data-i18n="builder.optCombo">Combo Completo</span>
+                  </div>
+                  <span class="text-2xl" aria-hidden="true">⚡</span>
+                </button>
+              </div>
+
+              <!-- Consola retro de propiedades del archivo seleccionado -->
+              <div class="bg-cream border-2 border-espresso rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1.5">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span id="previewFilename" class="font-mono text-sm font-bold bg-espresso text-zipGold px-2.5 py-0.5 rounded-lg">combo.zip</span>
+                    <span id="previewSize" class="font-mono text-xs sm:text-sm font-bold text-berry">Tamaño: 2.5 MB (Sabor)</span>
+                  </div>
+                  <p id="previewDesc" class="text-sm text-espresso/85 font-semibold"></p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 shrink-0" id="previewBadges">
+                  <!-- Badges generados dinámicamente por JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECCIÓN 4 — MÁS DETALLES & CONTACTO [ más_detalles.zip ]
+         ===================================================================== -->
+    <section id="detalles" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+      <div class="max-w-5xl mx-auto reveal">
+
+        <!-- Encabezado de sección -->
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-skySoft/35 border-2 border-espresso mb-3">
+            <span aria-hidden="true">📱</span>
+            <span class="font-mono text-xs sm:text-sm font-bold text-espresso lang-fade" data-i18n="details.fileTag">[ más_detalles.zip ]</span>
+          </div>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl text-espresso lang-fade" data-i18n="details.title">
+            ¡Más Detalles y Contacto!
+          </h2>
+          <p class="text-espresso/75 mt-2 text-base lang-fade" data-i18n="details.subtitle">
+            Encuentra cuándo, dónde y cómo conseguir tu paquete de sabor de Programación 5.
+          </p>
+        </div>
+
+        <!-- Aviso amigable para el creador sobre cómo editar las notas -->
+        <div class="mb-7 rounded-2xl bg-[#FFF9FB] border-2 border-dashed border-berry/40 px-4 py-3 flex items-start sm:items-center gap-3">
+          <span class="text-xl shrink-0" aria-hidden="true">📝</span>
+          <p class="text-xs sm:text-sm text-espresso/80 leading-relaxed lang-fade" data-i18n="details.editorTip">
+            <strong>Nota para edición:</strong> Los recuadros punteados son espacios temporales. Puedes rellenarlos fácilmente editando el objeto <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-espresso/20 text-berry font-bold">EDITABLE_DATA</code> al inicio del código JavaScript.
+          </p>
+        </div>
+
+        <!-- Cuadrícula 2x2 de tarjetas retro-ventana -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+          <!-- Tarjeta 1: Fecha -->
+          <div class="kawaii-window kawaii-window-hover overflow-hidden flex flex-col">
+            <div class="bg-[#FFF4D6] border-b-2 border-espresso px-4 py-2.5 flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-espresso lang-fade" data-i18n="details.dateFile">📅 fecha.txt</span>
+              <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-white border border-espresso"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-zipGold border border-espresso"></span>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between gap-3">
+              <h3 class="font-display font-bold text-xl text-espresso lang-fade" data-i18n="details.dateTitle">Fecha del Evento / Venta</h3>
+              <div class="editable-note-box p-3.5" data-editable-box="eventDate">
+                <p class="font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="eventDate"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta 2: Horario -->
+          <div class="kawaii-window kawaii-window-hover overflow-hidden flex flex-col">
+            <div class="bg-[#E8F8EE] border-b-2 border-espresso px-4 py-2.5 flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-espresso lang-fade" data-i18n="details.hoursFile">⏰ horario.txt</span>
+              <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-white border border-espresso"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-mintSoft border border-espresso"></span>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between gap-3">
+              <h3 class="font-display font-bold text-xl text-espresso lang-fade" data-i18n="details.hoursTitle">Horario de Atención</h3>
+              <div class="editable-note-box p-3.5" data-editable-box="eventHours">
+                <p class="font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="eventHours"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta 3: Ubicación -->
+          <div class="kawaii-window kawaii-window-hover overflow-hidden flex flex-col">
+            <div class="bg-[#E0F2FE] border-b-2 border-espresso px-4 py-2.5 flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-espresso lang-fade" data-i18n="details.locationFile">📍 ubicacion.map</span>
+              <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-white border border-espresso"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-skySoft border border-espresso"></span>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between gap-3">
+              <h3 class="font-display font-bold text-xl text-espresso lang-fade" data-i18n="details.locationTitle">Ubicación / Stand</h3>
+              <div class="editable-note-box p-3.5" data-editable-box="eventLocation">
+                <p class="font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="eventLocation"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta 4: Pedidos y Redes Sociales -->
+          <div class="kawaii-window kawaii-window-hover overflow-hidden flex flex-col">
+            <div class="bg-[#FFE5EC] border-b-2 border-espresso px-4 py-2.5 flex items-center justify-between">
+              <span class="font-mono text-xs font-bold text-espresso lang-fade" data-i18n="details.contactFile">💬 pedidos_redes.zip</span>
+              <div class="flex gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-white border border-espresso"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-shrimp border border-espresso"></span>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+              <div>
+                <h3 class="font-display font-bold text-xl text-espresso lang-fade" data-i18n="details.contactTitle">Pedidos y Redes</h3>
+                <div class="editable-note-box p-3 mt-2.5" data-editable-box="contactHandle">
+                  <p class="font-semibold text-sm text-espresso/85 lang-fade" data-editable-field="contactHandle"></p>
+                </div>
+              </div>
+
+              <!-- Botones de contacto (WhatsApp e Instagram) -->
+              <div class="flex flex-wrap gap-2.5">
+                <a
+                  id="whatsappBtn"
+                  href="#detalles"
+                  class="kawaii-btn flex-1 min-w-[130px] bg-[#D8F3DC] hover:bg-mintSoft text-espresso font-display font-bold text-sm px-4 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"
+                >
+                  <span>💬</span>
+                  <span>WhatsApp</span>
+                </a>
+                <a
+                  id="instagramBtn"
+                  href="#detalles"
+                  class="kawaii-btn flex-1 min-w-[130px] bg-[#FFE5EC] hover:bg-[#FFC2D1] text-espresso font-display font-bold text-sm px-4 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"
+                >
+                  <span>📸</span>
+                  <span>Instagram</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =======================================================================
+       FOOTER — INSIGNIA PROGRAMACIÓN 5, SELLO 100% FRESCO Y BARRA DE ESTADO
+       ======================================================================= -->
+  <footer class="mt-10 border-t-[2.5px] border-espresso bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-5">
+      <!-- Marca y grupo -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-zipGold border-2 border-espresso flex items-center justify-center shadow-[0_3px_0_#3D2314]">
+          <span class="font-display font-bold text-sm text-espresso">.zip</span>
+        </div>
+        <div>
+          <p class="font-display font-bold text-lg text-espresso leading-tight">SABOR.ZIP</p>
+          <p class="font-mono text-xs font-bold text-berry">Programación 5</p>
+        </div>
+      </div>
+
+      <!-- Sello 100% Fresco -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cream border-2 border-espresso shadow-[0_3px_0_rgba(61,35,20,0.12)]">
+        <span aria-hidden="true">🍍</span>
+        <span class="font-display font-bold text-sm text-espresso lang-fade" data-i18n="footer.freshSeal">100% Fresco • 100% Fresh</span>
+        <span aria-hidden="true">🌶️</span>
+      </div>
+
+      <!-- Botón volver arriba -->
+      <a href="#inicio" class="font-mono text-xs font-bold text-espresso hover:text-berry underline underline-offset-4 lang-fade" data-i18n="footer.backTop">
+        ↑ Volver arriba
+      </a>
+    </div>
+
+    <!-- Barra de estado estilo OS retro -->
+    <div class="bg-espresso text-cream px-4 py-2.5">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-[11px] sm:text-xs">
+        <span class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-mintSoft inline-block"></span>
+          <span class="lang-fade" data-i18n="footer.statusLeft">ESTADO: EN LÍNEA • SABOR DESCOMPRIMIDO 100%</span>
+        </span>
+        <span class="text-zipGold font-bold">Programación 5 — SABOR.ZIP</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =======================================================================
+       MENSAJE FLOTANTE PERSONALIZADO (TOAST) — NUNCA USAMOS alert()
+       ======================================================================= -->
+  <div
+    id="toastBox"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)] pointer-events-none opacity-0 translate-y-4 transition-all duration-300"
+  >
+    <div class="bg-white border-[2.5px] border-espresso rounded-2xl shadow-[0_6px_0_#3D2314] px-4 py-3 flex items-center gap-3">
+      <span id="toastIcon" class="text-xl shrink-0">📝</span>
+      <p id="toastMessage" class="text-xs sm:text-sm font-bold text-espresso leading-snug"></p>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       LÓGICA JAVASCRIPT:
+       1) EDITABLE_DATA (centralizado para que el usuario actualice fácilmente)
+       2) TRADUCCIONES COMPLETAS ES / EN
+       3) ANIMACIÓN DE DESCOMPRESIÓN + SPARKLES + SCROLL REVEAL + BUILDER
+       ======================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /**
+       * =====================================================================
+       * ✏️ CONFIGURACIÓN EDITABLE — ACTUALIZA AQUÍ TUS DATOS REALES
+       * =====================================================================
+       * Deja cualquier campo como "" (cadena vacía) si aún no tienes el dato;
+       * la página mostrará automáticamente una nota punteada bilingüe para
+       * recordarte dónde completarlo después.
+       *
+       * Si prefieres un valor distinto en español e inglés, coloca ambos
+       * dentro de { es: "...", en: "..." }.
+       * =====================================================================
+       */
+      const EDITABLE_DATA = {
+        // --- TOSTADAS DE AGUACHILE ---
+        aguachilePrice: { es: '', en: '' },       // Ej: "$45 MXN"
+        aguachilePortion: { es: '', en: '' },     // Ej: "1 tostada grande / 1 large tostada"
+        aguachileNotes: { es: '', en: '' },       // Ej: "Incluye salsa extra y limón / Includes extra salsa & lime"
+
+        // --- CÓCTEL DE FRUTAS ---
+        frutasPrice: { es: '', en: '' },          // Ej: "$35 MXN"
+        frutasSize: { es: '', en: '' },           // Ej: "Vaso de 12 oz / 12 oz cup"
+        frutasToppings: { es: '', en: '' },       // Ej: "Opcional: chamoy, chilito en polvo y limón"
+
+        // --- EL COMBO PERFECTO ---
+        comboPrice: { es: '', en: '' },           // Ej: "$70 MXN"
+        comboPromo: { es: '', en: '' },           // Ej: "1 Tostada + 1 Cóctel (¡Ahorra $10!)"
+
+        // --- MÁS DETALLES Y CONTACTO ---
+        eventDate: { es: '', en: '' },            // Ej: "Viernes 27 de Noviembre"
+        eventHours: { es: '', en: '' },           // Ej: "10:00 AM – 2:00 PM"
+        eventLocation: { es: '', en: '' },        // Ej: "Explanada principal, Stand #5"
+        contactHandle: { es: '', en: '' },        // Ej: "@programacion5_saborzip"
+
+        // --- ENLACES DIRECTOS (Déjalos vacíos "" si aún no tienes el link) ---
+        whatsappUrl: '',                          // Ej: "https://wa.me/521XXXXXXXXXX"
+        instagramUrl: '',                         // Ej: "https://instagram.com/tu_cuenta"
+      };
+
+      /**
+       * Notas predeterminadas que aparecen mientras los campos en EDITABLE_DATA están vacíos.
+       */
+      const PLACEHOLDER_NOTES = {
+        es: {
+          aguachilePrice: '[NOTA: Agregar precio de la tostada aquí]',
+          aguachilePortion: '[NOTA: Agregar tamaño o piezas por orden]',
+          aguachileNotes: '[NOTA: Agregar detalles de salsas, nivel de picante o extras aquí]',
+          frutasPrice: '[NOTA: Agregar precio del cóctel de frutas aquí]',
+          frutasSize: '[NOTA: Agregar tamaño del vasito, ej. 10 oz / 12 oz]',
+          frutasToppings: '[NOTA: Especificar toppings opcionales, ej. chamoy, chilito en polvo, limón]',
+          comboPrice: '[NOTA: Agregar precio especial del combo aquí]',
+          comboPromo: '[NOTA: Agregar qué incluye o descuento del combo aquí]',
+          eventDate: '[NOTA: Agregar fecha de venta o evento aquí]',
+          eventHours: '[NOTA: Agregar horario de atención aquí]',
+          eventLocation: '[NOTA: Agregar ubicación exacta, salón o stand aquí]',
+          contactHandle: '[NOTA: Agregar número de WhatsApp o usuario de Instagram de Programación 5]',
+        },
+        en: {
+          aguachilePrice: '[NOTE: Add tostada price here]',
+          aguachilePortion: '[NOTE: Add portion size or pieces per order]',
+          aguachileNotes: '[NOTE: Add salsa options, spice details, or extras here]',
+          frutasPrice: '[NOTE: Add fruit cocktail price here]',
+          frutasSize: '[NOTE: Add cup size, e.g., 10 oz / 12 oz]',
+          frutasToppings: '[NOTE: Specify optional toppings, e.g., chamoy, chili powder, lime]',
+          comboPrice: '[NOTE: Add special combo price here]',
+          comboPromo: '[NOTE: Add combo contents or savings promo here]',
+          eventDate: '[NOTE: Add sale or event date here]',
+          eventHours: '[NOTE: Add service hours here]',
+          eventLocation: '[NOTE: Add exact location, booth, or venue here]',
+          contactHandle: '[NOTE: Add WhatsApp number or Instagram handle for Programación 5]',
+        },
+      };
+
+      /**
+       * Diccionario completo de traducciones ES / EN para toda la interfaz.
+       */
+      const TRANSLATIONS = {
+        es: {
+          pageTitle: 'SABOR.ZIP — Programación 5 | ¡Descomprime el sabor!',
+          nav: {
+            aguachile: 'Aguachile',
+            frutas: 'Cóctel de Frutas',
+            combo: 'Combo',
+            detalles: 'Más Detalles',
+          },
+          hero: {
+            status: '100% FRESCO',
+            badge: '📦 ARCHIVO LISTO PARA ABRIR',
+            title: '¡Descomprime el sabor!',
+            subtitle: 'Tostadas de Aguachile & Cóctel de Frutas Frescas',
+            desc: 'Dos mundos deliciosos comprimidos en una experiencia fresca, divertida y lista para disfrutar. Abre el archivo y descubre cada detalle de nuestro menú.',
+            cta: 'Descomprimir sabor',
+            loading: 'Cargando sabor...',
+            done: '¡Sabor descomprimido!',
+          },
+          common: {
+            ingredients: 'Ingredientes incluidos:',
+            fruitsIncluded: 'Frutas frescas incluidas:',
+          },
+          labels: {
+            price: 'Precio',
+            portion: 'Porción',
+            extraNotes: 'Notas adicionales / Salsas',
+            cupSize: 'Tamaño del vaso',
+            toppings: 'Toppings opcionales',
+            comboPrice: 'Precio del Combo',
+            promo: 'Promoción / Incluye',
+          },
+          ing: {
+            shrimp: 'Camarón',
+            cucumber: 'Pepino',
+            chili: 'Chile',
+            lime: 'Limón',
+            tostada: 'Tostada redonda',
+            watermelon: 'Sandía',
+            melon: 'Melón',
+            pineapple: 'Piña',
+          },
+          aguachile: {
+            tag: 'SALADO & PICOSITO',
+            title: 'Tostadas de Aguachile',
+            subtitle: '🍤 ¡Fresco y picosito!',
+            desc: 'Crujientes tostadas redondas preparadas al momento con camarón fresco marinado en jugo de limón, rodajas de pepino crujiente, cebolla morada y ese toque picosito de chile que despierta todos tus sentidos.',
+            spiceLabel: 'NIVEL PICANTE:',
+            spiceValue: '¡Picosito justo!',
+          },
+          frutas: {
+            tag: 'DULCE & REFRESCANTE',
+            title: 'Cóctel de Frutas',
+            subtitle: '🍍 ¡Dulce y refrescante!',
+            desc: 'Una explosión natural de dulzura y frescura servida en nuestro práctico vasito blanco. Mezcla seleccionada de sandía jugosa, melón dulce y piña tropical cortados al día para refrescarte a cualquier hora.',
+            freshLabel: 'FRESCURA:',
+            freshValue: '100% Natural',
+          },
+          combo: {
+            badge: '★ EL FAVORITO',
+            title: 'El Combo Perfecto',
+            subtitle: '💥 ¡Lo mejor de dos mundos!',
+            desc: '¿No sabes si elegir algo picosito o algo dulce? Llévate ambos en un solo paquete: el crunch fresco de nuestras Tostadas de Aguachile acompañado de la dulzura refrescante del Cóctel de Frutas.',
+          },
+          builder: {
+            title: 'Vista Previa de tu Archivo .ZIP',
+            subtitle: 'Selecciona qué quieres descomprimir hoy para ver los detalles de tu paquete:',
+            interactive: 'INTERACTIVO',
+            optAguachile: 'Solo Aguachile',
+            optFrutas: 'Solo Frutas',
+            optCombo: 'Combo Completo',
+            packs: {
+              aguachile: {
+                file: 'aguachile.zip',
+                size: 'Tamaño: 1.2 MB (Sabor picosito)',
+                desc: 'Tostada redonda crujiente con camarón fresco, pepino, chile y limón al instante.',
+                badges: ['🍤 Fresco', '🌶️ Picosito', '⚡ Listo al momento'],
+              },
+              frutas: {
+                file: 'frutas.zip',
+                size: 'Tamaño: 1.3 MB (Sabor dulce)',
+                desc: 'Vasito blanco con mezcla natural de sandía, melón y piña súper refrescante.',
+                badges: ['🍉 Sandía', '🍈 Melón', '🍍 Piña'],
+              },
+              combo: {
+                file: 'combo.zip',
+                size: 'Tamaño: 2.5 MB (Sabor completo)',
+                desc: '¡Paquete doble! Combina lo fresco y picosito del aguachile con lo dulce del cóctel de frutas.',
+                badges: ['💥 Doble sabor', '🍤 Aguachile', '🍍 Frutas'],
+              },
+            },
+          },
+          details: {
+            fileTag: '[ más_detalles.zip ]',
+            title: '¡Más Detalles y Contacto!',
+            subtitle: 'Encuentra cuándo, dónde y cómo conseguir tu paquete de sabor de Programación 5.',
+            editorTip: '<strong>Nota para edición:</strong> Los recuadros punteados son espacios temporales. Puedes rellenarlos fácilmente editando el objeto <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-espresso/20 text-berry font-bold">EDITABLE_DATA</code> al inicio del código JavaScript.',
+            dateFile: '📅 fecha.txt',
+            dateTitle: 'Fecha del Evento / Venta',
+            hoursFile: '⏰ horario.txt',
+            hoursTitle: 'Horario de Atención',
+            locationFile: '📍 ubicacion.map',
+            locationTitle: 'Ubicación / Stand',
+            contactFile: '💬 pedidos_redes.zip',
+            contactTitle: 'Pedidos y Redes',
+            missingLinkToast: 'Enlace pendiente: agrega tu URL real de {platform} en EDITABLE_DATA dentro del código.',
+          },
+          footer: {
+            freshSeal: '100% Fresco • 100% Fresh',
+            backTop: '↑ Volver arriba',
+            statusLeft: 'ESTADO: EN LÍNEA • SABOR DESCOMPRIMIDO 100%',
+          },
+        },
+
+        en: {
+          pageTitle: 'SABOR.ZIP — Programación 5 | Unzip the flavor!',
+          nav: {
+            aguachile: 'Aguachile',
+            frutas: 'Fruit Cocktail',
+            combo: 'Combo',
+            detalles: 'More Details',
+          },
+          hero: {
+            status: '100% FRESH',
+            badge: '📦 FILE READY TO UNZIP',
+            title: 'Unzip the flavor!',
+            subtitle: 'Aguachile Tostadas & Fresh Fruit Cocktail',
+            desc: 'Two delicious worlds compressed into one fresh, fun experience ready to enjoy. Unzip the file and explore every detail of our menu.',
+            cta: 'Unzip Flavor',
+            loading: 'Loading flavor...',
+            done: 'Flavor unzipped!',
+          },
+          common: {
+            ingredients: 'Included ingredients:',
+            fruitsIncluded: 'Fresh fruits included:',
+          },
+          labels: {
+            price: 'Price',
+            portion: 'Portion Size',
+            extraNotes: 'Extra Notes / Salsas',
+            cupSize: 'Cup Size',
+            toppings: 'Optional Toppings',
+            comboPrice: 'Combo Price',
+            promo: 'Promo / Includes',
+          },
+          ing: {
+            shrimp: 'Shrimp',
+            cucumber: 'Cucumber',
+            chili: 'Chili',
+            lime: 'Lime',
+            tostada: 'Round tostada',
+            watermelon: 'Watermelon',
+            melon: 'Melon',
+            pineapple: 'Pineapple',
+          },
+          aguachile: {
+            tag: 'SAVORY & SPICY',
+            title: 'Aguachile Tostadas',
+            subtitle: '🍤 Fresh & spicy!',
+            desc: 'Crispy round tostadas prepared fresh to order with lime-cured shrimp, crisp cucumber slices, red onion, and that lively chili kick that wakes up your taste buds.',
+            spiceLabel: 'SPICE LEVEL:',
+            spiceValue: 'Just the right kick!',
+          },
+          frutas: {
+            tag: 'SWEET & REFRESHING',
+            title: 'Fruit Cocktail',
+            subtitle: '🍍 Sweet & refreshing!',
+            desc: 'A natural burst of sweetness and freshness served in our handy white cup. A handpicked mix of juicy watermelon, sweet cantaloupe melon, and tropical pineapple cut daily.',
+            freshLabel: 'FRESHNESS:',
+            freshValue: '100% Natural',
+          },
+          combo: {
+            badge: '★ TOP PICK',
+            title: 'The Perfect Combo',
+            subtitle: '💥 The best of both worlds!',
+            desc: 'Can’t decide between spicy or sweet? Get both in one bundle: the fresh crunch of our Aguachile Tostadas paired with the cooling sweetness of our Fruit Cocktail.',
+          },
+          builder: {
+            title: 'Your .ZIP File Preview',
+            subtitle: 'Choose what you want to unzip today to inspect your flavor bundle:',
+            interactive: 'INTERACTIVE',
+            optAguachile: 'Aguachile Only',
+            optFrutas: 'Fruit Only',
+            optCombo: 'Full Combo',
+            packs: {
+              aguachile: {
+                file: 'aguachile.zip',
+                size: 'Size: 1.2 MB (Spicy flavor)',
+                desc: 'Crispy round tostada topped with fresh shrimp, cucumber, chili, and zesty lime.',
+                badges: ['🍤 Fresh', '🌶️ Spicy', '⚡ Made to order'],
+              },
+              frutas: {
+                file: 'frutas.zip',
+                size: 'Size: 1.3 MB (Sweet flavor)',
+                desc: 'Chubby white cup filled with a refreshing natural mix of watermelon, melon, and pineapple.',
+                badges: ['🍉 Watermelon', '🍈 Melon', '🍍 Pineapple'],
+              },
+              combo: {
+                file: 'combo.zip',
+                size: 'Size: 2.5 MB (Full flavor)',
+                desc: 'Double bundle! Combines fresh, spicy aguachile with our sweet, refreshing fruit cocktail.',
+                badges: ['💥 Best of both', '🍤 Aguachile', '🍍 Fruit'],
+              },
+            },
+          },
+          details: {
+            fileTag: '[ more_details.zip ]',
+            title: 'More Details & Contact!',
+            subtitle: 'Find out when, where, and how to grab your flavor pack from Programación 5.',
+            editorTip: '<strong>Editor note:</strong> Dashed boxes are temporary placeholders. You can fill them in easily by editing the <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-espresso/20 text-berry font-bold">EDITABLE_DATA</code> object at the top of the JavaScript code.',
+            dateFile: '📅 date.txt',
+            dateTitle: 'Event / Sale Date',
+            hoursFile: '⏰ hours.txt',
+            hoursTitle: 'Service Hours',
+            locationFile: '📍 location.map',
+            locationTitle: 'Location / Booth',
+            contactFile: '💬 orders_socials.zip',
+            contactTitle: 'Orders & Socials',
+            missingLinkToast: 'Link pending: add your real {platform} URL inside EDITABLE_DATA in the code.',
+          },
+          footer: {
+            freshSeal: '100% Fresco • 100% Fresh',
+            backTop: '↑ Back to top',
+            statusLeft: 'STATUS: ONLINE • FLAVOR UNZIPPED 100%',
+          },
+        },
+      };
+
+      // Estado global de la aplicación
+      let currentLang = 'es';
+      let currentPack = 'combo';
+      let isUnzipping = false;
+      let toastTimer = null;
+
+      /**
+       * Obtiene una cadena anidada del objeto de traducciones mediante clave con puntos (ej. "hero.title").
+       */
+      function getNestedTranslation(lang, keyPath) {
+        try {
+          return keyPath.split('.').reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : null), TRANSLATIONS[lang]);
+        } catch (err) {
+          console.error('Error leyendo traducción:', keyPath, err);
+          return null;
+        }
+      }
+
+      /**
+       * Rellena los bloques editables con el valor real de EDITABLE_DATA o con la nota punteada bilingüe.
+       */
+      function renderEditableFields() {
+        const fields = document.querySelectorAll('[data-editable-field]');
+        fields.forEach((el) => {
+          const fieldKey = el.getAttribute('data-editable-field');
+          const box = document.querySelector(`[data-editable-box="${fieldKey}"]`);
+          const rawEntry = EDITABLE_DATA[fieldKey];
+
+          let value = '';
+          if (typeof rawEntry === 'string') {
+            value = rawEntry.trim();
+          } else if (rawEntry && typeof rawEntry === 'object') {
+            value = (rawEntry[currentLang] || rawEntry.es || rawEntry.en || '').trim();
+          }
+
+          if (value) {
+            el.textContent = value;
+            el.classList.remove('italic', 'text-berry/90');
+            if (box) box.classList.add('filled');
+          } else {
+            el.textContent = PLACEHOLDER_NOTES[currentLang][fieldKey] || '[NOTA]';
+            el.classList.add('italic', 'text-berry/90');
+            if (box) box.classList.remove('filled');
+          }
+        });
+      }
+
+      /**
+       * Actualiza la vista previa interactiva del archivo .ZIP (Aguachile, Frutas o Combo).
+       */
+      function renderPackPreview() {
+        const packData = TRANSLATIONS[currentLang].builder.packs[currentPack];
+        if (!packData) return;
+
+        const filenameEl = document.getElementById('previewFilename');
+        const sizeEl = document.getElementById('previewSize');
+        const descEl = document.getElementById('previewDesc');
+        const badgesEl = document.getElementById('previewBadges');
+
+        if (filenameEl) filenameEl.textContent = packData.file;
+        if (sizeEl) sizeEl.textContent = packData.size;
+        if (descEl) descEl.textContent = packData.desc;
+
+        if (badgesEl) {
+          badgesEl.innerHTML = '';
+          packData.badges.forEach((badgeText) => {
+            const span = document.createElement('span');
+            span.className = 'kawaii-pill bg-white px-3 py-1 rounded-full font-display text-xs font-bold text-espresso';
+            span.textContent = badgeText;
+            badgesEl.appendChild(span);
+          });
+        }
+
+        // Actualizar estado visual de los botones del armador
+        document.querySelectorAll('.pack-tab').forEach((btn) => {
+          const isSelected = btn.getAttribute('data-pack') === currentPack;
+          btn.setAttribute('aria-selected', String(isSelected));
+          if (isSelected) {
+            btn.classList.remove('bg-white');
+            btn.classList.add('bg-zipGold');
+          } else {
+            btn.classList.remove('bg-zipGold');
+            btn.classList.add('bg-white');
+          }
+        });
+      }
+
+      /**
+       * Aplica el idioma actual (ES o EN) a toda la página con una transición suave.
+       */
+      function applyLanguage(lang, animate = true) {
+        try {
+          currentLang = lang === 'en' ? 'en' : 'es';
+          document.documentElement.lang = currentLang;
+
+          const updateContent = () => {
+            document.title = TRANSLATIONS[currentLang].pageTitle;
+
+            // Actualizar textos estáticos con data-i18n
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+              const key = el.getAttribute('data-i18n');
+              const translated = getNestedTranslation(currentLang, key);
+              if (translated !== null) {
+                // Solo el aviso de edición contiene formato inline seguro (<strong>, <code>)
+                if (key === 'details.editorTip') {
+                  el.innerHTML = translated;
+                } else {
+                  el.textContent = translated;
+                }
+              }
+            });
+
+            // Actualizar campos editables y vista previa del combo
+            renderEditableFields();
+            renderPackPreview();
+
+            // Mover el indicador del interruptor ES / EN
+            const indicator = document.getElementById('langIndicator');
+            const labelES = document.getElementById('labelES');
+            const labelEN = document.getElementById('labelEN');
+
+            if (indicator && labelES && labelEN) {
+              if (currentLang === 'en') {
+                indicator.style.transform = 'translateX(100%)';
+                labelES.classList.replace('text-espresso', 'text-espresso/60');
+                labelEN.classList.replace('text-espresso/60', 'text-espresso');
+              } else {
+                indicator.style.transform = 'translateX(0%)';
+                labelEN.classList.replace('text-espresso', 'text-espresso/60');
+                labelES.classList.replace('text-espresso/60', 'text-espresso');
+              }
+            }
+          };
+
+          if (animate) {
+            document.body.classList.add('lang-switching');
+            setTimeout(() => {
+              updateContent();
+              document.body.classList.remove('lang-switching');
+            }, 140);
+          } else {
+            updateContent();
+          }
+        } catch (err) {
+          console.error('Error al cambiar idioma:', err);
+        }
+      }
+
+      /**
+       * Muestra un mensaje flotante (toast) sin bloquear ni usar alert().
+       */
+      function showToast(message, icon = '✨') {
+        const toastBox = document.getElementById('toastBox');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMessage = document.getElementById('toastMessage');
+        if (!toastBox || !toastMessage) return;
+
+        toastIcon.textContent = icon;
+        toastMessage.textContent = message;
+
+        toastBox.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toastBox.classList.add('opacity-100', 'translate-y-0');
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastBox.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+          toastBox.classList.remove('opacity-100', 'translate-y-0');
+        }, 3600);
+      }
+
+      /**
+       * Genera una breve y elegante explosión de destellos pastel alrededor del botón al descomprimir.
+       */
+      function spawnPastelSparkles(originEl) {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+          const rect = originEl.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const colors = ['#FFD166', '#FF9F43', '#EC407A', '#52B788', '#A2D2FF', '#FF7B7B'];
+          const shapes = ['✦', '★', '●', '◆'];
+          const count = 18;
+
+          for (let i = 0; i < count; i++) {
+            const p = document.createElement('span');
+            const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+            const distance = 65 + Math.random() * 75;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance - 20;
+            const rot = Math.round((Math.random() - 0.5) * 240) + 'deg';
+
+            p.className = 'unzip-particle font-bold';
+            p.textContent = shapes[i % shapes.length];
+            p.style.left = `${cx}px`;
+            p.style.top = `${cy}px`;
+            p.style.color = colors[i % colors.length];
+            p.style.fontSize = `${12 + Math.random() * 10}px`;
+            p.style.setProperty('--tx', `${tx}px`);
+            p.style.setProperty('--ty', `${ty}px`);
+            p.style.setProperty('--rot', rot);
+
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 950);
+          }
+        } catch (err) {
+          console.error('Error creando partículas:', err);
+        }
+      }
+
+      /**
+       * Ejecuta la animación interactiva de descompresión (0% -> 100%) y hace scroll suave a los productos.
+       */
+      function runUnzipExperience() {
+        if (isUnzipping) return;
+        isUnzipping = true;
+
+        const btn = document.getElementById('unzipCtaBtn');
+        const wrap = document.getElementById('unzipProgressWrap');
+        const bar = document.getElementById('unzipProgressBar');
+        const percentText = document.getElementById('unzipPercentText');
+        const statusText = document.getElementById('unzipStatusText');
+
+        if (!wrap || !bar || !percentText || !statusText) {
+          isUnzipping = false;
+          return;
+        }
+
+        // Mostrar contenedor de progreso suavemente
+        wrap.classList.remove('opacity-0', 'max-h-0');
+        wrap.classList.add('opacity-100', 'max-h-40');
+        statusText.textContent = TRANSLATIONS[currentLang].hero.loading;
+        bar.style.width = '0%';
+        percentText.textContent = '0%';
+
+        let progress = 0;
+        const stepInterval = setInterval(() => {
+          progress = Math.min(100, progress + Math.floor(14 + Math.random() * 15));
+          bar.style.width = `${progress}%`;
+          percentText.textContent = `${progress}%`;
+
+          if (progress >= 100) {
+            clearInterval(stepInterval);
+            statusText.textContent = TRANSLATIONS[currentLang].hero.done;
+            if (btn) spawnPastelSparkles(btn);
+
+            setTimeout(() => {
+              const target = document.getElementById('aguachile');
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+              isUnzipping = false;
+            }, 420);
+          }
+        }, 75);
+      }
+
+      /**
+       * Configura los botones sociales (WhatsApp / Instagram) según si el usuario ya colocó URLs en EDITABLE_DATA.
+       */
+      function setupContactButtons() {
+        const waBtn = document.getElementById('whatsappBtn');
+        const igBtn = document.getElementById('instagramBtn');
+
+        const bindLink = (el, url, platformName) => {
+          if (!el) return;
+          if (url && url.trim() !== '') {
+            el.href = url.trim();
+            el.target = '_blank';
+            el.rel = 'noopener noreferrer';
+          } else {
+            el.addEventListener('click', (e) => {
+              e.preventDefault();
+              const msg = TRANSLATIONS[currentLang].details.missingLinkToast.replace('{platform}', platformName);
+              showToast(msg, '✏️');
+            });
+          }
+        };
+
+        bindLink(waBtn, EDITABLE_DATA.whatsappUrl, 'WhatsApp');
+        bindLink(igBtn, EDITABLE_DATA.instagramUrl, 'Instagram');
+      }
+
+      /**
+       * Inicializa animaciones de revelado al hacer scroll mediante IntersectionObserver.
+       */
+      function setupScrollReveal() {
+        const elements = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+          elements.forEach((el) => el.classList.add('visible'));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
+        );
+
+        elements.forEach((el) => observer.observe(el));
+      }
+
+      /**
+       * Inicialización principal cuando el DOM está listo.
+       */
+      document.addEventListener('DOMContentLoaded', () => {
+        try {
+          // 1. Aplicar idioma inicial (Español)
+          applyLanguage('es', false);
+
+          // 2. Toggle de idioma ES / EN
+          const langToggleBtn = document.getElementById('langToggleBtn');
+          if (langToggleBtn) {
+            langToggleBtn.addEventListener('click', () => {
+              const nextLang = currentLang === 'es' ? 'en' : 'es';
+              applyLanguage(nextLang, true);
+            });
+          }
+
+          // 3. Menú móvil
+          const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+          const mobileMenu = document.getElementById('mobileMenu');
+          if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+              const isHidden = mobileMenu.classList.toggle('hidden');
+              mobileMenuBtn.setAttribute('aria-expanded', String(!isHidden));
+            });
+
+            document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+              link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+              });
+            });
+          }
+
+          // 4. Botón CTA "Descomprimir sabor"
+          const unzipBtn = document.getElementById('unzipCtaBtn');
+          if (unzipBtn) {
+            unzipBtn.addEventListener('click', runUnzipExperience);
+          }
+
+          // 5. Selector interactivo de archivo en sección Combo
+          document.querySelectorAll('.pack-tab').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              currentPack = btn.getAttribute('data-pack') || 'combo';
+              renderPackPreview();
+            });
+          });
+
+          // 6. Enlaces de contacto y observador de scroll
+          setupContactButtons();
+          setupScrollReveal();
+        } catch (err) {
+          console.error('Error inicializando SABOR.ZIP:', err);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
