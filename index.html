@@ -239,9 +239,90 @@
       to { background-position: 28px 0; }
     }
 
+    /* Mascotas interactivas al tacto (Easter Eggs) */
+    .mascot-interactive {
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.2s ease;
+    }
+
+    .mascot-interactive:hover {
+      transform: scale(1.03);
+    }
+
+    @keyframes jellyBoing {
+      0% { transform: scale(1, 1); }
+      25% { transform: scale(1.13, 0.87); }
+      50% { transform: scale(0.91, 1.09); }
+      75% { transform: scale(1.05, 0.96); }
+      100% { transform: scale(1, 1); }
+    }
+
+    .animate-jelly {
+      animation: jellyBoing 0.52s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Partícula de reacción flotante (Easter Eggs y Encuesta) */
+    @keyframes reactionFloatUp {
+      0% { transform: translate(0, 0) scale(0.65) rotate(0deg); opacity: 1; }
+      65% { opacity: 1; }
+      100% { transform: translate(var(--rx), -95px) scale(1.25) rotate(var(--rrot)); opacity: 0; }
+    }
+
+    .reaction-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 95;
+      animation: reactionFloatUp 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Cinta animada estilo retro-OS (Marquee continuo GPU) */
+    @keyframes retroMarquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: retroMarquee 26s linear infinite;
+      will-change: transform;
+    }
+
+    .marquee-track:hover,
+    .marquee-track:active {
+      animation-play-state: paused;
+    }
+
+    /* Chip activo en el menú superior (Scroll-Spy) */
+    .nav-chip-active {
+      background-color: #FFD166 !important;
+      box-shadow: 0 3px 0 #3D2314 !important;
+      transform: translateY(-1.5px);
+      outline: 2px solid #3D2314;
+      outline-offset: 1px;
+    }
+
+    /* Botón de topping seleccionado */
+    .topping-btn {
+      touch-action: manipulation;
+      transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+    }
+
+    .topping-btn[aria-pressed="true"] {
+      background-color: #FFD166;
+      box-shadow: 0 2.5px 0 #3D2314;
+      transform: translateY(-1px);
+    }
+
     /* Respetar preferencia de movimiento reducido */
     @media (prefers-reduced-motion: reduce) {
-      .animate-float, .animate-float-delayed, .animate-float-soft, .retro-stripe-bar {
+      .animate-float, .animate-float-delayed, .animate-float-soft, .retro-stripe-bar, .marquee-track {
+        animation: none !important;
+      }
+      .animate-jelly {
         animation: none !important;
       }
       .reveal {
@@ -270,8 +351,20 @@
         </div>
       </a>
 
-      <!-- Selector animado ES / EN -->
-      <div class="flex items-center gap-2 shrink-0">
+      <!-- Controles derechos: Sonido Retro 8-bit + Selector ES / EN -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Botón de sonidos retro opcionales -->
+        <button
+          id="soundToggleBtn"
+          type="button"
+          aria-pressed="true"
+          aria-label="Activar o silenciar sonidos retro"
+          title="Sonidos retro"
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-cream hover:bg-zipGold/40 border-2 border-espresso flex items-center justify-center shadow-[0_2px_0_#3D2314] active:translate-y-0.5 cursor-pointer select-none transition-transform hover:scale-105 text-sm sm:text-base"
+        >
+          <span id="soundIcon" aria-hidden="true">🔊</span>
+        </button>
+
         <button
           id="langToggleBtn"
           type="button"
@@ -298,18 +391,22 @@
         </div>
 
         <!-- Estado Descomprimido: Menú con scroll horizontal propio -->
-        <nav id="mainNav" class="hidden items-center gap-2 whitespace-nowrap opacity-0 transition-opacity duration-300">
-          <a href="#aguachile" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-[#E8F8EE] hover:bg-mintSoft border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
+        <nav id="mainNav" class="hidden items-center gap-2 whitespace-nowrap opacity-0 transition-opacity duration-300 py-0.5">
+          <a href="#aguachile" data-nav-section="aguachile" class="nav-spy-link shrink-0 px-3.5 py-1.5 rounded-xl bg-[#E8F8EE] hover:bg-mintSoft border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
             <span>🍤</span>
             <span class="lang-fade" data-i18n="nav.aguachile">Aguachile</span>
           </a>
-          <a href="#frutas" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-[#FFF4D6] hover:bg-zipGold border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
+          <a href="#frutas" data-nav-section="frutas" class="nav-spy-link shrink-0 px-3.5 py-1.5 rounded-xl bg-[#FFF4D6] hover:bg-zipGold border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
             <span>🍍</span>
             <span class="lang-fade" data-i18n="nav.frutas">Cóctel de Frutas</span>
           </a>
-          <a href="#combo" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-[#FFE5EC] hover:bg-shrimp border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
+          <a href="#combo" data-nav-section="combo" class="nav-spy-link shrink-0 px-3.5 py-1.5 rounded-xl bg-[#FFE5EC] hover:bg-shrimp border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
             <span>⚡</span>
             <span class="lang-fade" data-i18n="nav.combo">El Combo</span>
+          </a>
+          <a href="#antojo" data-nav-section="antojo" class="nav-spy-link shrink-0 px-3.5 py-1.5 rounded-xl bg-[#E0F2FE] hover:bg-skySoft border-2 border-espresso text-espresso font-display font-bold text-xs sm:text-sm shadow-[0_2px_0_#3D2314] active:translate-y-0.5 transition-all inline-flex items-center gap-1.5">
+            <span>🎉</span>
+            <span class="lang-fade" data-i18n="nav.poll">¿Team?</span>
           </a>
         </nav>
       </div>
@@ -402,8 +499,14 @@
               <span class="font-mono text-xs font-bold tracking-wide text-espresso lang-fade" data-i18n="hero.badge">📦 ARCHIVO LISTO PARA ABRIR</span>
             </div>
 
-            <!-- Ilustración SVG Artesanal de la Mascota .ZIP -->
-            <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-5 flex items-center justify-center">
+            <!-- Ilustración SVG Artesanal de la Mascota .ZIP (Táctil / Easter Egg) -->
+            <div
+              id="heroMascotBtn"
+              role="button"
+              tabindex="0"
+              aria-label="Toca a la mascota SABOR.ZIP para una sorpresa"
+              class="mascot-interactive group relative mx-auto w-44 h-44 sm:w-52 sm:h-52 mb-5 flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-zipGold rounded-3xl"
+            >
               <!-- Halo suave detrás del personaje -->
               <div class="absolute inset-4 rounded-full bg-gradient-to-br from-zipGold/35 via-skySoft/25 to-mintSoft/35 blur-xl"></div>
               <svg viewBox="0 0 220 220" class="relative w-full h-full animate-float drop-shadow-md" role="img" aria-label="Mascota kawaii SABOR.ZIP">
@@ -523,15 +626,29 @@
          ===================================================================== -->
     <div id="unzippedContent" class="hidden opacity-0 transition-opacity duration-700 ease-out">
 
+    <!-- CINTA ANIMADA RETRO-OS (TICKER) -->
+    <div class="w-full bg-espresso text-zipGold border-y-[2.5px] border-espresso overflow-hidden py-2 select-none shadow-sm" aria-label="Cinta informativa de frescura">
+      <div class="marquee-track font-mono text-[11px] sm:text-xs font-bold tracking-wider">
+        <div class="flex items-center shrink-0">
+          <span class="px-4 lang-fade" data-i18n="ticker.text">✦ 100% FRESCO ✦ HECHO AL MOMENTO ✦ TOSTADAS CRUJIENTES ✦ FRUTA DE TEMPORADA ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦</span>
+          <span class="px-4 lang-fade" data-i18n="ticker.text">✦ 100% FRESCO ✦ HECHO AL MOMENTO ✦ TOSTADAS CRUJIENTES ✦ FRUTA DE TEMPORADA ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦</span>
+        </div>
+        <div class="flex items-center shrink-0" aria-hidden="true">
+          <span class="px-4 lang-fade" data-i18n="ticker.text">✦ 100% FRESCO ✦ HECHO AL MOMENTO ✦ TOSTADAS CRUJIENTES ✦ FRUTA DE TEMPORADA ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦</span>
+          <span class="px-4 lang-fade" data-i18n="ticker.text">✦ 100% FRESCO ✦ HECHO AL MOMENTO ✦ TOSTADAS CRUJIENTES ✦ FRUTA DE TEMPORADA ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦</span>
+        </div>
+      </div>
+    </div>
+
     <!-- =====================================================================
          SECCIÓN DEDICADA 1 — TOSTADAS DE AGUACHILE [ aguachile.zip ]
          ===================================================================== -->
-    <section id="aguachile" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+    <section id="aguachile" class="py-10 sm:py-18 px-3 sm:px-6 scroll-mt-28">
       <div class="max-w-5xl mx-auto reveal">
 
         <div class="kawaii-window kawaii-window-hover overflow-hidden">
           <!-- Encabezado estilo ventana retro -->
-          <div class="bg-[#E8F8EE] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+          <div class="bg-[#E8F8EE] border-b-[2.5px] border-espresso px-4 sm:px-7 py-2.5 sm:py-3 flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-lg" aria-hidden="true">📦</span>
               <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ aguachile.zip ]</span>
@@ -544,9 +661,16 @@
           <!-- Layout dividido (Split Layout) -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 sm:p-10 items-center">
 
-            <!-- Columna Ilustración SVG Artesanal: Tostada REDONDA de Aguachile -->
+            <!-- Columna Ilustración SVG Artesanal: Tostada REDONDA de Aguachile (Interactiva al tacto) -->
             <div class="lg:col-span-5 flex flex-col items-center justify-center">
-              <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+              <div
+                id="aguachileMascotBtn"
+                role="button"
+                tabindex="0"
+                aria-label="Toca la tostada de aguachile para ver una reacción"
+                class="mascot-interactive relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-mint rounded-full"
+              >
+                <span class="absolute top-1 right-2 z-10 px-2.5 py-0.5 rounded-full bg-white/95 border-2 border-espresso font-mono text-[10px] font-bold text-espresso shadow-[0_2px_0_#3D2314] pointer-events-none animate-pulse lang-fade" data-i18n="common.tapMe">👆 ¡Tócame!</span>
                 <!-- Círculo pastel de fondo -->
                 <div class="absolute inset-4 rounded-full bg-gradient-to-tr from-mintSoft/55 via-[#FFF8E7] to-shrimp/20 border-2 border-dashed border-mint/40"></div>
 
@@ -773,12 +897,12 @@
     <!-- =====================================================================
          SECCIÓN DEDICADA 2 — CÓCTEL DE FRUTAS [ frutas.zip ]
          ===================================================================== -->
-    <section id="frutas" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+    <section id="frutas" class="py-10 sm:py-18 px-3 sm:px-6 scroll-mt-28">
       <div class="max-w-5xl mx-auto reveal">
 
         <div class="kawaii-window kawaii-window-hover overflow-hidden">
           <!-- Encabezado estilo ventana retro -->
-          <div class="bg-[#FFF4D6] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+          <div class="bg-[#FFF4D6] border-b-[2.5px] border-espresso px-4 sm:px-7 py-2.5 sm:py-3 flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-lg" aria-hidden="true">📦</span>
               <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ frutas.zip ]</span>
@@ -876,9 +1000,16 @@
 
             </div>
 
-            <!-- Columna Ilustración SVG Artesanal: VASO BLANCO CHIQUITO Y GORDITO (Solo sandía, melón y piña + cuchara) -->
+            <!-- Columna Ilustración SVG Artesanal: VASO BLANCO + TOPPINGS INTERACTIVOS -->
             <div class="lg:col-span-5 order-1 lg:order-2 flex flex-col items-center justify-center">
-              <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+              <div
+                id="frutasMascotBtn"
+                role="button"
+                tabindex="0"
+                aria-label="Toca el vasito de frutas para ver una reacción"
+                class="mascot-interactive relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-zipGold rounded-full"
+              >
+                <span class="absolute top-1 left-2 z-10 px-2.5 py-0.5 rounded-full bg-white/95 border-2 border-espresso font-mono text-[10px] font-bold text-espresso shadow-[0_2px_0_#3D2314] pointer-events-none animate-pulse lang-fade" data-i18n="common.tapMe">👆 ¡Tócame!</span>
                 <!-- Círculo pastel de fondo -->
                 <div class="absolute inset-4 rounded-full bg-gradient-to-br from-[#FFF4D6] via-[#FFF0F3] to-skySoft/30 border-2 border-dashed border-zipAmber/45"></div>
 
@@ -970,16 +1101,85 @@
                   <!-- Boca feliz -->
                   <path d="M117 176 Q126 190 135 176 Z" fill="#D81B60" stroke="#3D2314" stroke-width="3" stroke-linejoin="round"/>
                   <path d="M121 182 Q126 186 131 182 Z" fill="#FF8FA3"/>
+
+                  <!-- CAPAS INTERACTIVAS DE TOPPINGS SOBRE EL VASITO -->
+                  <!-- 1. Chamoy brillante escurriendo -->
+                  <g id="svgToppingChamoy" class="opacity-0 transition-opacity duration-300 pointer-events-none">
+                    <path d="M74 128 Q84 136 96 126 Q106 146 112 128 Q124 138 134 126 Q142 152 150 128 Q164 138 176 126 L176 136 Q164 148 152 138 Q144 166 136 138 Q124 148 112 140 Q105 158 96 138 Q84 146 74 136 Z" fill="#C9184A" opacity="0.88" stroke="#3D2314" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M108 100 Q122 114 140 100 Q154 112 164 106" fill="none" stroke="#C9184A" stroke-width="5.5" stroke-linecap="round" opacity="0.88"/>
+                    <circle cx="144" cy="161" r="3" fill="#C9184A"/>
+                  </g>
+
+                  <!-- 2. Chilito en polvo espolvoreado -->
+                  <g id="svgToppingChili" class="opacity-0 transition-opacity duration-300 pointer-events-none">
+                    <circle cx="116" cy="82" r="2.2" fill="#9B2226"/>
+                    <circle cx="132" cy="78" r="2" fill="#AE2012"/>
+                    <circle cx="124" cy="90" r="2.3" fill="#9B2226"/>
+                    <circle cx="84" cy="98" r="2.2" fill="#9B2226"/>
+                    <circle cx="94" cy="108" r="1.9" fill="#AE2012"/>
+                    <circle cx="76" cy="112" r="2.1" fill="#9B2226"/>
+                    <circle cx="152" cy="110" r="2.2" fill="#9B2226"/>
+                    <circle cx="164" cy="114" r="2" fill="#AE2012"/>
+                    <circle cx="144" cy="116" r="1.8" fill="#9B2226"/>
+                    <circle cx="134" cy="112" r="2" fill="#AE2012"/>
+                    <circle cx="112" cy="118" r="2.2" fill="#9B2226"/>
+                  </g>
+
+                  <!-- 3. Rodajita de limón feliz en el borde izquierdo -->
+                  <g id="svgToppingLime" transform="translate(56, 125) rotate(-25)" class="opacity-0 transition-opacity duration-300 pointer-events-none">
+                    <circle cx="0" cy="0" r="18" fill="#70A92D" stroke="#3D2314" stroke-width="3.6"/>
+                    <circle cx="0" cy="0" r="13" fill="#D9F99D"/>
+                    <circle cx="0" cy="0" r="10" fill="#BEF264" stroke="#ECFCCB" stroke-width="1.5"/>
+                    <line x1="-10" y1="0" x2="10" y2="0" stroke="#ECFCCB" stroke-width="1.5"/>
+                    <line x1="0" y1="-10" x2="0" y2="10" stroke="#ECFCCB" stroke-width="1.5"/>
+                  </g>
                 </svg>
               </div>
 
               <!-- Medidor visual de frescura y dulzura -->
-              <div class="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-cream border-2 border-espresso/20">
+              <div class="mt-3 inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-cream border-2 border-espresso/20">
                 <span class="font-mono text-xs font-bold text-espresso/75 lang-fade" data-i18n="frutas.freshLabel">FRESCURA:</span>
                 <div class="flex items-center gap-1" aria-label="Frescura al máximo">
                   <span>✨</span><span>✨</span><span>✨</span><span>✨</span>
                 </div>
                 <span class="font-display text-xs font-bold text-mint lang-fade" data-i18n="frutas.freshValue">100% Natural</span>
+              </div>
+
+              <!-- PERSONALIZADOR VISUAL DE TOPPINGS EN EL VASITO -->
+              <div class="mt-4 w-full max-w-xs bg-cream border-2 border-espresso rounded-2xl p-3 shadow-[0_3px_0_#3D2314]">
+                <p class="font-mono text-[11px] font-bold uppercase tracking-wide text-espresso text-center mb-2 lang-fade" data-i18n="frutas.customizerTitle">
+                  🎨 ¡Arma tu vasito visualmente!
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Personalizar toppings">
+                  <button
+                    type="button"
+                    data-topping="lime"
+                    aria-pressed="false"
+                    class="topping-btn px-3 py-1.5 rounded-xl bg-white border-2 border-espresso font-display text-xs font-bold text-espresso inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>🍋</span>
+                    <span class="lang-fade" data-i18n="frutas.topLime">Limón</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-topping="chili"
+                    aria-pressed="false"
+                    class="topping-btn px-3 py-1.5 rounded-xl bg-white border-2 border-espresso font-display text-xs font-bold text-espresso inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>🌶️</span>
+                    <span class="lang-fade" data-i18n="frutas.topChili">Chilito</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-topping="chamoy"
+                    aria-pressed="false"
+                    class="topping-btn px-3 py-1.5 rounded-xl bg-white border-2 border-espresso font-display text-xs font-bold text-espresso inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>🍯</span>
+                    <span class="lang-fade" data-i18n="frutas.topChamoy">Chamoy</span>
+                  </button>
+                </div>
+                <p id="toppingSummaryText" class="mt-2.5 text-center font-mono text-[11px] font-bold text-berry leading-snug"></p>
               </div>
             </div>
 
@@ -993,12 +1193,12 @@
          SECCIÓN DESTACADA 3 — EL COMBO PERFECTO [ combo.zip ]
          + ARMADOR / VISTA PREVIA INTERACTIVA DE ARCHIVO DE SABOR
          ===================================================================== -->
-    <section id="combo" class="py-12 sm:py-20 px-4 sm:px-6 scroll-mt-16">
+    <section id="combo" class="py-10 sm:py-18 px-3 sm:px-6 scroll-mt-28">
       <div class="max-w-5xl mx-auto reveal">
 
         <div class="kawaii-window overflow-hidden bg-gradient-to-br from-white via-[#FFFDF5] to-[#FFF5F8]">
           <!-- Encabezado ventana combo.zip -->
-          <div class="bg-gradient-to-r from-[#FFE5EC] via-[#FFF3C4] to-[#E0F2FE] border-b-[2.5px] border-espresso px-5 sm:px-7 py-3 flex items-center justify-between gap-2">
+          <div class="bg-gradient-to-r from-[#FFE5EC] via-[#FFF3C4] to-[#E0F2FE] border-b-[2.5px] border-espresso px-4 sm:px-7 py-2.5 sm:py-3 flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
               <span class="text-lg" aria-hidden="true">⚡</span>
               <span class="font-mono text-sm sm:text-base font-bold text-espresso">[ combo.zip ]</span>
@@ -1190,6 +1390,77 @@
       </div>
     </section>
 
+    <!-- =====================================================================
+         SECCIÓN 4 — ENCUESTA INTERACTIVA DE ANTOJO (SIN SERVIDOR NI BD)
+         ===================================================================== -->
+    <section id="antojo" class="py-8 sm:py-14 px-3 sm:px-6 scroll-mt-28">
+      <div class="max-w-3xl mx-auto reveal">
+        <div class="kawaii-window overflow-hidden bg-gradient-to-br from-white via-[#FFFDF9] to-[#F0F9FF]">
+          <!-- Cabecera ventana encuesta -->
+          <div class="bg-[#E0F2FE] border-b-[2.5px] border-espresso px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-base" aria-hidden="true">📊</span>
+              <span class="font-mono text-xs sm:text-sm font-bold text-espresso">[ termometro_antojo.exe ]</span>
+            </div>
+            <span class="font-mono text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full bg-white border-2 border-espresso text-berry lang-fade" data-i18n="poll.badge">
+              TUS REACCIONES
+            </span>
+          </div>
+
+          <div class="p-4 sm:p-8 text-center">
+            <h2 class="font-display font-bold text-2xl sm:text-3xl text-espresso leading-tight lang-fade" data-i18n="poll.title">
+              🎉 ¿Qué se te antoja más hoy?
+            </h2>
+            <p class="text-xs sm:text-sm text-espresso/75 mt-1.5 mb-5 lang-fade" data-i18n="poll.subtitle">
+              Toca tu favorito para lanzar reacciones (se guarda en tu dispositivo sin necesidad de servidor).
+            </p>
+
+            <!-- 3 Botones táctiles de reacción -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-5">
+              <button
+                type="button"
+                data-vote="aguachile"
+                class="poll-btn kawaii-btn bg-[#E8F8EE] hover:bg-mintSoft text-espresso rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center gap-1 cursor-pointer"
+              >
+                <span class="text-2xl sm:text-3xl" aria-hidden="true">🍤</span>
+                <span class="font-display font-bold text-xs sm:text-sm leading-tight lang-fade" data-i18n="poll.optAguachile">Aguachile</span>
+                <span id="pollCountAguachile" class="font-mono text-[11px] font-bold text-mint bg-white px-2 py-0.5 rounded-full border border-espresso/25 mt-0.5">0</span>
+              </button>
+
+              <button
+                type="button"
+                data-vote="frutas"
+                class="poll-btn kawaii-btn bg-[#FFF4D6] hover:bg-zipGold text-espresso rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center gap-1 cursor-pointer"
+              >
+                <span class="text-2xl sm:text-3xl" aria-hidden="true">🍍</span>
+                <span class="font-display font-bold text-xs sm:text-sm leading-tight lang-fade" data-i18n="poll.optFrutas">Frutas</span>
+                <span id="pollCountFrutas" class="font-mono text-[11px] font-bold text-zipAmber bg-white px-2 py-0.5 rounded-full border border-espresso/25 mt-0.5">0</span>
+              </button>
+
+              <button
+                type="button"
+                data-vote="combo"
+                class="poll-btn kawaii-btn bg-[#FFE5EC] hover:bg-shrimp/60 text-espresso rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center gap-1 cursor-pointer"
+              >
+                <span class="text-2xl sm:text-3xl" aria-hidden="true">⚡</span>
+                <span class="font-display font-bold text-xs sm:text-sm leading-tight lang-fade" data-i18n="poll.optCombo">El Combo</span>
+                <span id="pollCountCombo" class="font-mono text-[11px] font-bold text-berry bg-white px-2 py-0.5 rounded-full border border-espresso/25 mt-0.5">0</span>
+              </button>
+            </div>
+
+            <!-- Barra tricolor animada de proporciones -->
+            <div class="w-full h-4 bg-cream border-2 border-espresso rounded-full overflow-hidden flex shadow-inner">
+              <div id="pollBarAguachile" class="h-full bg-mint transition-all duration-500" style="width: 33.33%"></div>
+              <div id="pollBarFrutas" class="h-full bg-zipGold border-x border-espresso/40 transition-all duration-500" style="width: 33.33%"></div>
+              <div id="pollBarCombo" class="h-full bg-berryLight transition-all duration-500" style="width: 33.34%"></div>
+            </div>
+
+            <p id="pollSummaryText" class="mt-3 font-mono text-[11px] sm:text-xs font-bold text-espresso/75"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     </div>
 
 
@@ -1283,7 +1554,11 @@
             aguachile: 'Aguachile',
             frutas: 'Cóctel de Frutas',
             combo: 'Combo',
+            poll: '¿Team?',
             locked: 'sabor.zip [Comprimido]',
+          },
+          ticker: {
+            text: '✦ 100% FRESCO ✦ HECHO AL MOMENTO ✦ TOSTADAS CRUJIENTES ✦ FRUTA DE TEMPORADA ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦',
           },
           hero: {
             lockedStatus: 'COMPRIMIDO',
@@ -1302,6 +1577,7 @@
           },
           common: {
             recompress: 'Volver a comprimir',
+            tapMe: '👆 ¡Tócame!',
             ingredients: 'Ingredientes incluidos:',
             fruitsIncluded: 'Frutas frescas incluidas:',
           },
@@ -1357,6 +1633,11 @@
             feat4Title: 'Puro Refresco',
             feat4Desc: 'Sin jarabes ni azúcar añadida, solo fruta fresca.',
             standBadge: '¡El descanso más dulce y refrescante de tu día!',
+            customizerTitle: '🎨 ¡Arma tu vasito visualmente!',
+            topLime: 'Limón',
+            topChili: 'Chilito',
+            topChamoy: 'Chamoy',
+            mixBase: 'Tu mezcla: Sandía + Melón + Piña',
           },
           combo: {
             badge: '★ EL FAVORITO',
@@ -1367,6 +1648,21 @@
             feat1Desc: '1 Tostada de Aguachile + 1 Cóctel de Frutas. Lo salado y lo dulce en perfecta armonía.',
             feat2Title: 'Paquete Favorito',
             feat2Desc: 'El menú estrella de Programación 5. ¡Ahorra y disfruta ambos productos juntos!',
+          },
+          poll: {
+            badge: 'TUS REACCIONES',
+            title: '🎉 ¿Qué se te antoja más hoy?',
+            subtitle: 'Toca tu favorito para lanzar reacciones (se guarda en tu navegador, sin servidor).',
+            optAguachile: 'Aguachile',
+            optFrutas: 'Frutas',
+            optCombo: 'El Combo',
+            emptyMsg: '¡Toca cualquiera de los 3 botones para registrar tu antojo!',
+            statsMsg: 'Reacciones en este dispositivo: {total} ({a}% Aguachile • {f}% Frutas • {c}% Combo)',
+          },
+          easter: {
+            hero: ['¡Zip zip! ¡Listo para liberar el sabor! 🗜️', '¡100% sabor comprimido de Programación 5! ✨'],
+            aguachile: ['¡Crunch garantizado en cada mordida! 🫓✨', '¡Camarón fresquecito con limón al punto! 🍤🍋', '¡Picante suavecito 2/4 aprobado! 🌶️'],
+            frutas: ['¡Sandía, melón y piña súper refrescantes! 🍉🍍', '¡Pura fruta natural picada al día! ❄️✨', '¡Agrégale limón, chilito o chamoy abajo! 🍯'],
           },
           builder: {
             title: 'Vista Previa de tu Archivo .ZIP',
@@ -1396,21 +1692,6 @@
               },
             },
           },
-          details: {
-            fileTag: '[ más_detalles.zip ]',
-            title: '¡Más Detalles y Contacto!',
-            subtitle: 'Encuentra cuándo, dónde y cómo conseguir tu paquete de sabor de Programación 5.',
-            editorTip: '<strong>Nota para edición:</strong> Los recuadros punteados son espacios temporales. Puedes rellenarlos fácilmente editando el objeto <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-espresso/20 text-berry font-bold">EDITABLE_DATA</code> al inicio del código JavaScript.',
-            dateFile: '📅 fecha.txt',
-            dateTitle: 'Fecha del Evento / Venta',
-            hoursFile: '⏰ horario.txt',
-            hoursTitle: 'Horario de Atención',
-            locationFile: '📍 ubicacion.map',
-            locationTitle: 'Ubicación / Stand',
-            contactFile: '💬 pedidos_redes.zip',
-            contactTitle: 'Pedidos y Redes',
-            missingLinkToast: 'Enlace pendiente: agrega tu URL real de {platform} en EDITABLE_DATA dentro del código.',
-          },
           footer: {
             freshSeal: '100% Fresco • 100% Fresh',
             backTop: '↑ Volver arriba',
@@ -1424,7 +1705,11 @@
             aguachile: 'Aguachile',
             frutas: 'Fruit Cocktail',
             combo: 'Combo',
+            poll: 'Craving?',
             locked: 'sabor.zip [Compressed]',
+          },
+          ticker: {
+            text: '✦ 100% FRESH ✦ MADE TO ORDER ✦ CRISPY TOSTADAS ✦ SEASONAL FRUIT ✦ PROGRAMACIÓN 5 ✦ SABOR.ZIP ✦',
           },
           hero: {
             lockedStatus: 'COMPRESSED',
@@ -1442,7 +1727,8 @@
             done: '✅ Flavor unzipped! (View menu ↓)',
           },
           common: {
-            recompress: 'Volver a comprimir',
+            recompress: 'Re-compress file',
+            tapMe: '👆 Tap me!',
             ingredients: 'Included ingredients:',
             fruitsIncluded: 'Fresh fruits included:',
           },
@@ -1498,6 +1784,11 @@
             feat4Title: 'Pure Hydration',
             feat4Desc: 'No added sugars or syrups, just pure fresh fruit.',
             standBadge: 'The sweetest and most refreshing break of your day!',
+            customizerTitle: '🎨 Customize your fruit cup!',
+            topLime: 'Lime',
+            topChili: 'Chili powder',
+            topChamoy: 'Chamoy',
+            mixBase: 'Your mix: Watermelon + Melon + Pineapple',
           },
           combo: {
             badge: '★ TOP PICK',
@@ -1508,6 +1799,21 @@
             feat1Desc: '1 Aguachile Tostada + 1 Fruit Cocktail. Savory crunch and refreshing sweetness.',
             feat2Title: 'Crowd Favorite',
             feat2Desc: 'Programación 5 flagship bundle. Save and enjoy both products together!',
+          },
+          poll: {
+            badge: 'YOUR REACTIONS',
+            title: '🎉 What are you craving most today?',
+            subtitle: 'Tap your favorite to launch reactions (saved locally on your device, no server).',
+            optAguachile: 'Aguachile',
+            optFrutas: 'Fruit Cup',
+            optCombo: 'The Combo',
+            emptyMsg: 'Tap any button above to share your craving!',
+            statsMsg: 'Reactions on this device: {total} ({a}% Aguachile • {f}% Fruit • {c}% Combo)',
+          },
+          easter: {
+            hero: ['Zip zip! Ready to unleash the flavor! 🗜️', '100% compressed flavor from Programación 5! ✨'],
+            aguachile: ['Guaranteed crunch in every bite! 🫓✨', 'Fresh shrimp cured in zesty lime! 🍤🍋', 'Mild 2/4 spice level approved! 🌶️'],
+            frutas: ['Refreshing watermelon, melon & pineapple! 🍉🍍', '100% natural fruit cut fresh daily! ❄️✨', 'Try adding lime, chili or chamoy below! 🍯'],
           },
           builder: {
             title: 'Your .ZIP File Preview',
@@ -1537,21 +1843,6 @@
               },
             },
           },
-          details: {
-            fileTag: '[ more_details.zip ]',
-            title: 'More Details & Contact!',
-            subtitle: 'Find out when, where, and how to grab your flavor pack from Programación 5.',
-            editorTip: '<strong>Editor note:</strong> Dashed boxes are temporary placeholders. You can fill them in easily by editing the <code class="font-mono bg-white px-1.5 py-0.5 rounded border border-espresso/20 text-berry font-bold">EDITABLE_DATA</code> object at the top of the JavaScript code.',
-            dateFile: '📅 date.txt',
-            dateTitle: 'Event / Sale Date',
-            hoursFile: '⏰ hours.txt',
-            hoursTitle: 'Service Hours',
-            locationFile: '📍 location.map',
-            locationTitle: 'Location / Booth',
-            contactFile: '💬 orders_socials.zip',
-            contactTitle: 'Orders & Socials',
-            missingLinkToast: 'Link pending: add your real {platform} URL inside EDITABLE_DATA in the code.',
-          },
           footer: {
             freshSeal: '100% Fresco • 100% Fresh',
             backTop: '↑ Back to top',
@@ -1560,12 +1851,84 @@
         },
       };
 
-      // Estado global de la aplicación
+      // Estado global de la aplicación (100% cliente, sin servidor ni BD)
       let currentLang = 'es';
       let currentPack = 'combo';
       let isUnzipping = false;
       let isContentUnzipped = false;
       let toastTimer = null;
+      let soundEnabled = true;
+      let audioCtx = null;
+      const selectedToppings = { lime: false, chili: false, chamoy: false };
+      let pollCounts = { aguachile: 0, frutas: 0, combo: 0 };
+
+      try {
+        const savedSound = localStorage.getItem('saborzip_sound_v1');
+        if (savedSound === 'false') soundEnabled = false;
+        const savedPoll = localStorage.getItem('saborzip_poll_v1');
+        if (savedPoll) {
+          const parsed = JSON.parse(savedPoll);
+          if (parsed && typeof parsed === 'object') {
+            pollCounts.aguachile = Number(parsed.aguachile) || 0;
+            pollCounts.frutas = Number(parsed.frutas) || 0;
+            pollCounts.combo = Number(parsed.combo) || 0;
+          }
+        }
+      } catch (e) {
+        // Ignorar si almacenamiento local está bloqueado
+      }
+
+      /**
+       * Sintetizador retro 8-bit liviano usando Web Audio API (sin archivos externos).
+       */
+      function playRetroSound(type) {
+        if (!soundEnabled) return;
+        try {
+          const AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtor) return;
+          if (!audioCtx) audioCtx = new AudioCtor();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const now = audioCtx.currentTime;
+          const playTone = (freqStart, freqEnd, duration, startOffset = 0, wave = 'triangle', gainPeak = 0.08) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = wave;
+            osc.frequency.setValueAtTime(freqStart, now + startOffset);
+            if (freqEnd && freqEnd !== freqStart) {
+              osc.frequency.exponentialRampToValueAtTime(freqEnd, now + startOffset + duration);
+            }
+            gain.gain.setValueAtTime(0.001, now + startOffset);
+            gain.gain.exponentialRampToValueAtTime(gainPeak, now + startOffset + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + startOffset + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + startOffset);
+            osc.stop(now + startOffset + duration + 0.02);
+          };
+
+          if (type === 'click') {
+            playTone(540, 760, 0.055, 0, 'sine', 0.06);
+          } else if (type === 'pop') {
+            playTone(480, 880, 0.075, 0, 'triangle', 0.08);
+          } else if (type === 'boing') {
+            playTone(280, 620, 0.14, 0, 'sine', 0.09);
+          } else if (type === 'tick') {
+            playTone(680, 680, 0.025, 0, 'square', 0.02);
+          } else if (type === 'unzip') {
+            playTone(523.25, 523.25, 0.09, 0.0, 'triangle', 0.08);
+            playTone(659.25, 659.25, 0.09, 0.07, 'triangle', 0.08);
+            playTone(783.99, 783.99, 0.09, 0.14, 'triangle', 0.08);
+            playTone(1046.5, 1046.5, 0.18, 0.21, 'triangle', 0.09);
+          } else if (type === 'compress') {
+            playTone(783.99, 783.99, 0.08, 0.0, 'triangle', 0.07);
+            playTone(659.25, 659.25, 0.08, 0.07, 'triangle', 0.07);
+            playTone(523.25, 523.25, 0.14, 0.14, 'triangle', 0.08);
+          }
+        } catch (err) {
+          // Audio bloqueado o no soportado; degradación elegante sin error
+        }
+      }
 
       /**
        * Obtiene una cadena anidada del objeto de traducciones mediante clave con puntos (ej. "hero.title").
@@ -1640,8 +2003,10 @@
               }
             });
 
-            // Actualizar vista previa del combo
+            // Actualizar vista previa del combo, toppings y encuesta
             renderPackPreview();
+            if (typeof renderToppingSummary === 'function') renderToppingSummary();
+            if (typeof renderPollState === 'function') renderPollState();
 
             // Preservar textos si el contenido ya fue descomprimido
             if (isContentUnzipped) {
@@ -1800,6 +2165,7 @@
         let progress = 0;
         const stepInterval = setInterval(() => {
           progress = Math.min(100, progress + Math.floor(12 + Math.random() * 14));
+          playRetroSound('tick');
           bar.style.width = `${progress}%`;
           percentText.textContent = `${progress}%`;
 
@@ -1821,7 +2187,8 @@
               heroLockStatus.className = 'inline-flex items-center gap-1.5 font-mono text-[11px] font-bold bg-[#D8F3DC] border-2 border-mint px-3 py-1 rounded-full text-[#2D6A4F] shadow-sm transition-all';
             }
 
-            // 2. Destellos y confeti
+            // 2. Sonido de victoria retro, destellos y confeti
+            playRetroSound('unzip');
             if (btn) spawnPastelSparkles(btn);
 
             // 3. Desbloquear navegación en barra scrolleable
@@ -1880,6 +2247,7 @@
       function runCompressExperience() {
         if (!isContentUnzipped || isUnzipping) return;
 
+        playRetroSound('compress');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         setTimeout(() => {
@@ -1966,6 +2334,242 @@
       }
 
       /**
+       * Lanza emojis flotando hacia arriba desde un elemento (Easter Eggs y Encuesta).
+       */
+      function spawnFloatingReactions(originEl, emojis) {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !originEl) return;
+          const rect = originEl.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+
+          for (let i = 0; i < 6; i++) {
+            const span = document.createElement('span');
+            span.className = 'reaction-particle text-lg sm:text-xl select-none';
+            span.textContent = emojis[i % emojis.length];
+            const rx = Math.round((Math.random() - 0.5) * 90);
+            const rrot = Math.round((Math.random() - 0.5) * 45) + 'deg';
+            span.style.left = `${cx + (Math.random() - 0.5) * 32}px`;
+            span.style.top = `${cy}px`;
+            span.style.setProperty('--rx', `${rx}px`);
+            span.style.setProperty('--rrot', rrot);
+            document.body.appendChild(span);
+            setTimeout(() => span.remove(), 980);
+          }
+        } catch (err) {
+          console.error('Error en reacciones flotantes:', err);
+        }
+      }
+
+      /**
+       * Actualiza el texto resumen del personalizador visual de toppings.
+       */
+      function renderToppingSummary() {
+        const summaryEl = document.getElementById('toppingSummaryText');
+        if (!summaryEl) return;
+        const f = TRANSLATIONS[currentLang].frutas;
+        const activeNames = [];
+        if (selectedToppings.lime) activeNames.push(f.topLime);
+        if (selectedToppings.chili) activeNames.push(f.topChili);
+        if (selectedToppings.chamoy) activeNames.push(f.topChamoy);
+
+        if (activeNames.length === 0) {
+          summaryEl.textContent = f.mixBase;
+        } else {
+          summaryEl.textContent = `${f.mixBase} + ${activeNames.join(' + ')} ✨`;
+        }
+      }
+
+      /**
+       * Configura el personalizador interactivo de toppings en el vasito de frutas.
+       */
+      function setupToppingCustomizer() {
+        const overlayMap = {
+          lime: document.getElementById('svgToppingLime'),
+          chili: document.getElementById('svgToppingChili'),
+          chamoy: document.getElementById('svgToppingChamoy'),
+        };
+
+        document.querySelectorAll('.topping-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const key = btn.getAttribute('data-topping');
+            if (!key || !(key in selectedToppings)) return;
+
+            selectedToppings[key] = !selectedToppings[key];
+            const isOn = selectedToppings[key];
+            btn.setAttribute('aria-pressed', String(isOn));
+
+            const layer = overlayMap[key];
+            if (layer) {
+              layer.classList.toggle('opacity-0', !isOn);
+              layer.classList.toggle('opacity-100', isOn);
+            }
+
+            playRetroSound('pop');
+            renderToppingSummary();
+          });
+        });
+
+        renderToppingSummary();
+      }
+
+      /**
+       * Renderiza el estado y la barra tricolor de la encuesta local (sin BD).
+       */
+      function renderPollState() {
+        const total = pollCounts.aguachile + pollCounts.frutas + pollCounts.combo;
+        const countA = document.getElementById('pollCountAguachile');
+        const countF = document.getElementById('pollCountFrutas');
+        const countC = document.getElementById('pollCountCombo');
+        const barA = document.getElementById('pollBarAguachile');
+        const barF = document.getElementById('pollBarFrutas');
+        const barC = document.getElementById('pollBarCombo');
+        const summary = document.getElementById('pollSummaryText');
+
+        if (countA) countA.textContent = String(pollCounts.aguachile);
+        if (countF) countF.textContent = String(pollCounts.frutas);
+        if (countC) countC.textContent = String(pollCounts.combo);
+
+        let pctA = 33.33;
+        let pctF = 33.33;
+        let pctC = 33.34;
+
+        if (total > 0) {
+          pctA = Math.round((pollCounts.aguachile / total) * 100);
+          pctF = Math.round((pollCounts.frutas / total) * 100);
+          pctC = Math.max(0, 100 - pctA - pctF);
+        }
+
+        if (barA) barA.style.width = `${pctA}%`;
+        if (barF) barF.style.width = `${pctF}%`;
+        if (barC) barC.style.width = `${pctC}%`;
+
+        if (summary) {
+          const p = TRANSLATIONS[currentLang].poll;
+          if (total === 0) {
+            summary.textContent = p.emptyMsg;
+          } else {
+            summary.textContent = p.statsMsg
+              .replace('{total}', total)
+              .replace('{a}', pctA)
+              .replace('{f}', pctF)
+              .replace('{c}', pctC);
+          }
+        }
+      }
+
+      /**
+       * Configura la encuesta interactiva con reacciones flotantes guardada en localStorage.
+       */
+      function setupCravingPoll() {
+        const emojiMap = {
+          aguachile: ['🍤', '🌶️', '🍋', '✨'],
+          frutas: ['🍍', '🍉', '🍈', '❄️'],
+          combo: ['⚡', '💥', '⭐', '🎉'],
+        };
+
+        document.querySelectorAll('.poll-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const vote = btn.getAttribute('data-vote');
+            if (!vote || !(vote in pollCounts)) return;
+
+            pollCounts[vote] += 1;
+            try {
+              localStorage.setItem('saborzip_poll_v1', JSON.stringify(pollCounts));
+            } catch (e) {}
+
+            playRetroSound('pop');
+            spawnFloatingReactions(btn, emojiMap[vote]);
+            renderPollState();
+          });
+        });
+
+        renderPollState();
+      }
+
+      /**
+       * Activa los Easter Eggs táctiles en las ilustraciones SVG.
+       */
+      function setupMascotEasterEggs() {
+        const configs = [
+          { id: 'heroMascotBtn', key: 'hero', emojis: ['🗜️', '✨', '⭐', '💛'], icon: '🗜️' },
+          { id: 'aguachileMascotBtn', key: 'aguachile', emojis: ['🍤', '🍋', '🌶️', '🥒'], icon: '🍤' },
+          { id: 'frutasMascotBtn', key: 'frutas', emojis: ['🍉', '🍍', '🍈', '❄️'], icon: '🍍' },
+        ];
+        const indices = { hero: 0, aguachile: 0, frutas: 0 };
+
+        configs.forEach(({ id, key, emojis, icon }) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const trigger = () => {
+            el.classList.remove('animate-jelly');
+            void el.offsetWidth; // Reiniciar animación CSS
+            el.classList.add('animate-jelly');
+
+            playRetroSound('boing');
+            spawnFloatingReactions(el, emojis);
+
+            const messages = TRANSLATIONS[currentLang].easter[key];
+            if (messages && messages.length > 0) {
+              const msg = messages[indices[key] % messages.length];
+              indices[key] += 1;
+              showToast(msg, icon);
+            }
+          };
+
+          el.addEventListener('click', trigger);
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              trigger();
+            }
+          });
+        });
+      }
+
+      /**
+       * Configura Scroll-Spy para iluminar y centrar automáticamente el chip activo
+       * en la barra horizontal superior mientras el usuario recorre la página.
+       */
+      function setupScrollSpy() {
+        const sectionIds = ['aguachile', 'frutas', 'combo', 'antojo'];
+        const links = Array.from(document.querySelectorAll('.nav-spy-link'));
+        const scrollContainer = document.getElementById('navScrollContainer');
+        if (links.length === 0) return;
+
+        const setActiveChip = (activeId) => {
+          links.forEach((link) => {
+            const isMatch = link.getAttribute('data-nav-section') === activeId;
+            link.classList.toggle('nav-chip-active', isMatch);
+            if (isMatch && scrollContainer && isContentUnzipped) {
+              const targetLeft = link.offsetLeft - scrollContainer.clientWidth / 2 + link.clientWidth / 2;
+              scrollContainer.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+            }
+          });
+        };
+
+        if ('IntersectionObserver' in window) {
+          const spyObserver = new IntersectionObserver(
+            (entries) => {
+              if (!isContentUnzipped) return;
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  setActiveChip(entry.target.id);
+                }
+              });
+            },
+            { rootMargin: '-28% 0px -55% 0px', threshold: 0.05 }
+          );
+
+          sectionIds.forEach((id) => {
+            const sec = document.getElementById(id);
+            if (sec) spyObserver.observe(sec);
+          });
+        }
+      }
+
+      /**
        * Inicialización principal cuando el DOM está listo.
        */
       document.addEventListener('DOMContentLoaded', () => {
@@ -1973,10 +2577,31 @@
           // 1. Aplicar idioma inicial (Español)
           applyLanguage('es', false);
 
+          // 1.5 Botón de sonido retro
+          const soundToggleBtn = document.getElementById('soundToggleBtn');
+          const soundIcon = document.getElementById('soundIcon');
+          const syncSoundUI = () => {
+            if (soundToggleBtn) soundToggleBtn.setAttribute('aria-pressed', String(soundEnabled));
+            if (soundIcon) soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+          };
+          syncSoundUI();
+
+          if (soundToggleBtn) {
+            soundToggleBtn.addEventListener('click', () => {
+              soundEnabled = !soundEnabled;
+              try {
+                localStorage.setItem('saborzip_sound_v1', String(soundEnabled));
+              } catch (e) {}
+              syncSoundUI();
+              if (soundEnabled) playRetroSound('click');
+            });
+          }
+
           // 2. Toggle de idioma ES / EN
           const langToggleBtn = document.getElementById('langToggleBtn');
           if (langToggleBtn) {
             langToggleBtn.addEventListener('click', () => {
+              playRetroSound('click');
               const nextLang = currentLang === 'es' ? 'en' : 'es';
               applyLanguage(nextLang, true);
             });
@@ -2005,6 +2630,7 @@
           // 5. Selector interactivo de archivo en sección Combo
           document.querySelectorAll('.pack-tab').forEach((btn) => {
             btn.addEventListener('click', () => {
+              playRetroSound('click');
               currentPack = btn.getAttribute('data-pack') || 'combo';
               renderPackPreview();
             });
@@ -2016,7 +2642,13 @@
             recompressBtn.addEventListener('click', runCompressExperience);
           }
 
-          // 7. Observador de scroll
+          // 7. Easter eggs táctiles, personalizador de toppings, encuesta local y Scroll-Spy
+          setupMascotEasterEggs();
+          setupToppingCustomizer();
+          setupCravingPoll();
+          setupScrollSpy();
+
+          // 8. Observador de scroll
           setupScrollReveal();
         } catch (err) {
           console.error('Error inicializando SABOR.ZIP:', err);
