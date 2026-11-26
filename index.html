@@ -374,20 +374,8 @@
         </div>
       </a>
 
-      <!-- Controles derechos: Sonido Retro 8-bit + Selector ES / EN -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <!-- Botón de sonidos retro opcionales -->
-        <button
-          id="soundToggleBtn"
-          type="button"
-          aria-pressed="true"
-          aria-label="Activar o silenciar sonidos retro"
-          title="Sonidos retro"
-          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-cream hover:bg-zipGold/40 border-2 border-espresso flex items-center justify-center shadow-[0_2px_0_#3D2314] active:translate-y-0.5 cursor-pointer select-none transition-transform hover:scale-105 text-sm sm:text-base"
-        >
-          <span id="soundIcon" aria-hidden="true">🔊</span>
-        </button>
-
+      <!-- Selector animado ES / EN -->
+      <div class="flex items-center gap-2 shrink-0">
         <button
           id="langToggleBtn"
           type="button"
@@ -1894,14 +1882,11 @@
       let isUnzipping = false;
       let isContentUnzipped = false;
       let toastTimer = null;
-      let soundEnabled = true;
       let audioCtx = null;
       const selectedToppings = { lime: false, chili: false, chamoy: false };
       let pollCounts = { aguachile: 0, frutas: 0, combo: 0 };
 
       try {
-        const savedSound = localStorage.getItem('saborzip_sound_v1');
-        if (savedSound === 'false') soundEnabled = false;
         const savedPoll = localStorage.getItem('saborzip_poll_v1');
         if (savedPoll) {
           const parsed = JSON.parse(savedPoll);
@@ -1919,7 +1904,6 @@
        * Sintetizador retro 8-bit liviano usando Web Audio API (sin archivos externos).
        */
       function playRetroSound(type) {
-        if (!soundEnabled) return;
         try {
           const AudioCtor = window.AudioContext || window.webkitAudioContext;
           if (!AudioCtor) return;
@@ -2614,26 +2598,6 @@
         try {
           // 1. Aplicar idioma inicial (Español)
           applyLanguage('es', false);
-
-          // 1.5 Botón de sonido retro
-          const soundToggleBtn = document.getElementById('soundToggleBtn');
-          const soundIcon = document.getElementById('soundIcon');
-          const syncSoundUI = () => {
-            if (soundToggleBtn) soundToggleBtn.setAttribute('aria-pressed', String(soundEnabled));
-            if (soundIcon) soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-          };
-          syncSoundUI();
-
-          if (soundToggleBtn) {
-            soundToggleBtn.addEventListener('click', () => {
-              soundEnabled = !soundEnabled;
-              try {
-                localStorage.setItem('saborzip_sound_v1', String(soundEnabled));
-              } catch (e) {}
-              syncSoundUI();
-              if (soundEnabled) playRetroSound('click');
-            });
-          }
 
           // 2. Toggle de idioma ES / EN
           const langToggleBtn = document.getElementById('langToggleBtn');
