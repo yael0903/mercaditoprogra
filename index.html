@@ -148,18 +148,17 @@
       box-shadow: 0 2.5px 0 rgba(61, 35, 20, 0.16);
     }
 
-    /* Estilo especial para las notas editables que el usuario completará después */
-    .editable-note-box {
-      border: 2px dashed rgba(216, 27, 96, 0.45);
-      background: linear-gradient(135deg, #FFF9FB 0%, #FFFDF5 100%);
+    /* Tarjetas de atributos y características estéticas */
+    .feature-card {
+      border: 2px solid var(--espresso);
       border-radius: 1rem;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
+      box-shadow: 0 3px 0 #3D2314;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
     }
 
-    .editable-note-box.filled {
-      border: 2px solid var(--espresso);
-      background: #FFFFFF;
-      box-shadow: 0 3px 0 rgba(61, 35, 20, 0.1);
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 0 #3D2314;
     }
 
     /* =====================================================================
@@ -714,30 +713,53 @@
                 </div>
               </div>
 
-              <!-- Bloques Editables (Precio, Porción, Notas extra) -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <div class="editable-note-box p-3.5" data-editable-box="aguachilePrice">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.price">Precio</span>
+              <!-- Atributos y Garantía de Sabor (Estético y llamativo) -->
+              <div class="pt-2 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <!-- Feature 1: Camarón -->
+                  <div class="feature-card bg-[#E8F8EE] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🍤</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="aguachile.feat1Title">Camarón Fresco</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="aguachile.feat1Desc">Curado al momento en jugo de limón natural.</p>
+                    </div>
                   </div>
-                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="aguachilePrice"></p>
+
+                  <!-- Feature 2: Crunch -->
+                  <div class="feature-card bg-[#FFF4D6] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🫓</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="aguachile.feat2Title">Crunch Perfecto</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="aguachile.feat2Desc">Tostada redonda doradita y ultra crujiente.</p>
+                    </div>
+                  </div>
+
+                  <!-- Feature 3: Sazón -->
+                  <div class="feature-card bg-[#FFE5EC] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🌶️</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="aguachile.feat3Title">Sazón Artesanal</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="aguachile.feat3Desc">Toque suave de chile con cebolla morada y pepino.</p>
+                    </div>
+                  </div>
+
+                  <!-- Feature 4: Preparación -->
+                  <div class="feature-card bg-[#E0F2FE] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">⚡</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="aguachile.feat4Title">Montado al Instante</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="aguachile.feat4Desc">Preparado en tu orden para máxima frescura.</p>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="editable-note-box p-3.5" data-editable-box="aguachilePortion">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.portion">Porción</span>
+                <!-- Banner Stand -->
+                <div class="feature-card bg-gradient-to-r from-[#E8F8EE] via-[#FFF9FB] to-[#FFF4D6] p-3 flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🎪</span>
+                    <span class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="aguachile.standBadge">¡Pídela fresca en nuestro stand de Programación 5!</span>
                   </div>
-                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="aguachilePortion"></p>
-                </div>
-
-                <div class="editable-note-box p-3.5 sm:col-span-2" data-editable-box="aguachileNotes">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.extraNotes">Notas adicionales / Salsas</span>
-                  </div>
-                  <p class="font-body font-semibold text-sm text-espresso/80 lang-fade" data-editable-field="aguachileNotes"></p>
+                  <span class="font-mono text-[10px] font-bold bg-white border border-espresso/30 px-2 py-0.5 rounded-full text-berry shrink-0">100% FRESCO</span>
                 </div>
               </div>
 
@@ -802,30 +824,53 @@
                 </div>
               </div>
 
-              <!-- Bloques Editables (Precio, Tamaño del vaso, Toppings opcionales) -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <div class="editable-note-box p-3.5" data-editable-box="frutasPrice">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.price">Precio</span>
+              <!-- Atributos y Garantía de Frescura (Estético y llamativo) -->
+              <div class="pt-2 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <!-- Feature 1: Frutas naturales -->
+                  <div class="feature-card bg-[#FFE5EC] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🍉</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="frutas.feat1Title">100% Fruta Natural</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="frutas.feat1Desc">Sandía jugosa, melón dulce y piña seleccionada.</p>
+                    </div>
                   </div>
-                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="frutasPrice"></p>
+
+                  <!-- Feature 2: Vasito portátil -->
+                  <div class="feature-card bg-[#FFF4D6] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🥤</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="frutas.feat2Title">Vasito Portátil</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="frutas.feat2Desc">Formato cómodo y listo para disfrutar donde vayas.</p>
+                    </div>
+                  </div>
+
+                  <!-- Feature 3: Toppings -->
+                  <div class="feature-card bg-[#E8F8EE] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">🧂</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="frutas.feat3Title">Toppings al Gusto</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="frutas.feat3Desc">Acompáñalo con chamoy, chilito en polvo y limón.</p>
+                    </div>
+                  </div>
+
+                  <!-- Feature 4: Hidratación -->
+                  <div class="feature-card bg-[#E0F2FE] p-3 flex items-start gap-2.5">
+                    <span class="text-xl shrink-0" aria-hidden="true">❄️</span>
+                    <div>
+                      <h4 class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="frutas.feat4Title">Puro Refresco</h4>
+                      <p class="text-xs text-espresso/75 leading-snug lang-fade" data-i18n="frutas.feat4Desc">Sin jarabes ni azúcar añadida, solo fruta fresca.</p>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="editable-note-box p-3.5" data-editable-box="frutasSize">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.cupSize">Tamaño del vaso</span>
+                <!-- Banner Dulce -->
+                <div class="feature-card bg-gradient-to-r from-[#FFF4D6] via-[#FFE5EC] to-[#E8F8EE] p-3 flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">🍍</span>
+                    <span class="font-display font-bold text-xs sm:text-sm text-espresso lang-fade" data-i18n="frutas.standBadge">¡El descanso más dulce y refrescante de tu día!</span>
                   </div>
-                  <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="frutasSize"></p>
-                </div>
-
-                <div class="editable-note-box p-3.5 sm:col-span-2" data-editable-box="frutasToppings">
-                  <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                    <span aria-hidden="true">✏️</span>
-                    <span class="lang-fade" data-i18n="labels.toppings">Toppings opcionales</span>
-                  </div>
-                  <p class="font-body font-semibold text-sm text-espresso/80 lang-fade" data-editable-field="frutasToppings"></p>
+                  <span class="font-mono text-[10px] font-bold bg-white border border-espresso/30 px-2 py-0.5 rounded-full text-zipAmber shrink-0">NATURAL</span>
                 </div>
               </div>
 
@@ -964,7 +1009,7 @@
           </div>
 
           <div class="p-6 sm:p-10">
-            <!-- Fila superior: Ilustración combinada + descripción y precio editable -->
+            <!-- Fila superior: Ilustración combinada + descripción y beneficios -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
               <!-- Mini ilustración pareada: Tostada Redonda + Vasito Blanco celebrando juntos -->
@@ -1046,21 +1091,22 @@
                   ¿No sabes si elegir algo picosito o algo dulce? Llévate ambos en un solo paquete: el crunch fresco de nuestras Tostadas de Aguachile acompañado de la dulzura refrescante del Cóctel de Frutas.
                 </p>
 
+                <!-- Beneficios del Combo (Estético y llamativo) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div class="editable-note-box p-3.5" data-editable-box="comboPrice">
-                    <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                      <span aria-hidden="true">✏️</span>
-                      <span class="lang-fade" data-i18n="labels.comboPrice">Precio del Combo</span>
+                  <div class="feature-card bg-gradient-to-br from-[#FFF4D6] to-[#FFE5EC] p-3.5 flex items-start gap-3">
+                    <span class="text-2xl shrink-0" aria-hidden="true">💥</span>
+                    <div>
+                      <h4 class="font-display font-bold text-sm sm:text-base text-espresso lang-fade" data-i18n="combo.feat1Title">La Experiencia Completa</h4>
+                      <p class="text-xs text-espresso/80 mt-0.5 leading-relaxed lang-fade" data-i18n="combo.feat1Desc">1 Tostada de Aguachile + 1 Cóctel de Frutas. Lo salado y lo dulce en perfecta armonía.</p>
                     </div>
-                    <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="comboPrice"></p>
                   </div>
 
-                  <div class="editable-note-box p-3.5" data-editable-box="comboPromo">
-                    <div class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase text-berry mb-1">
-                      <span aria-hidden="true">✏️</span>
-                      <span class="lang-fade" data-i18n="labels.promo">Promoción / Incluye</span>
+                  <div class="feature-card bg-gradient-to-br from-[#E8F8EE] to-[#E0F2FE] p-3.5 flex items-start gap-3">
+                    <span class="text-2xl shrink-0" aria-hidden="true">⭐</span>
+                    <div>
+                      <h4 class="font-display font-bold text-sm sm:text-base text-espresso lang-fade" data-i18n="combo.feat2Title">Paquete Favorito</h4>
+                      <p class="text-xs text-espresso/80 mt-0.5 leading-relaxed lang-fade" data-i18n="combo.feat2Desc">El menú estrella de Programación 5. ¡Ahorra y disfruta ambos productos juntos!</p>
                     </div>
-                    <p class="font-display font-semibold text-sm sm:text-base text-espresso/85 lang-fade" data-editable-field="comboPromo"></p>
                   </div>
                 </div>
               </div>
@@ -1226,77 +1272,6 @@
     (function () {
       'use strict';
 
-      /**
-       * =====================================================================
-       * ✏️ CONFIGURACIÓN EDITABLE — ACTUALIZA AQUÍ TUS DATOS REALES
-       * =====================================================================
-       * Deja cualquier campo como "" (cadena vacía) si aún no tienes el dato;
-       * la página mostrará automáticamente una nota punteada bilingüe para
-       * recordarte dónde completarlo después.
-       *
-       * Si prefieres un valor distinto en español e inglés, coloca ambos
-       * dentro de { es: "...", en: "..." }.
-       * =====================================================================
-       */
-      const EDITABLE_DATA = {
-        // --- TOSTADAS DE AGUACHILE ---
-        aguachilePrice: { es: '', en: '' },       // Ej: "$45 MXN"
-        aguachilePortion: { es: '', en: '' },     // Ej: "1 tostada grande / 1 large tostada"
-        aguachileNotes: { es: '', en: '' },       // Ej: "Incluye salsa extra y limón / Includes extra salsa & lime"
-
-        // --- CÓCTEL DE FRUTAS ---
-        frutasPrice: { es: '', en: '' },          // Ej: "$35 MXN"
-        frutasSize: { es: '', en: '' },           // Ej: "Vaso de 12 oz / 12 oz cup"
-        frutasToppings: { es: '', en: '' },       // Ej: "Opcional: chamoy, chilito en polvo y limón"
-
-        // --- EL COMBO PERFECTO ---
-        comboPrice: { es: '', en: '' },           // Ej: "$70 MXN"
-        comboPromo: { es: '', en: '' },           // Ej: "1 Tostada + 1 Cóctel (¡Ahorra $10!)"
-
-        // --- MÁS DETALLES Y CONTACTO ---
-        eventDate: { es: '', en: '' },            // Ej: "Viernes 27 de Noviembre"
-        eventHours: { es: '', en: '' },           // Ej: "10:00 AM – 2:00 PM"
-        eventLocation: { es: '', en: '' },        // Ej: "Explanada principal, Stand #5"
-        contactHandle: { es: '', en: '' },        // Ej: "@programacion5_saborzip"
-
-        // --- ENLACES DIRECTOS (Déjalos vacíos "" si aún no tienes el link) ---
-        whatsappUrl: '',                          // Ej: "https://wa.me/521XXXXXXXXXX"
-        instagramUrl: '',                         // Ej: "https://instagram.com/tu_cuenta"
-      };
-
-      /**
-       * Notas predeterminadas que aparecen mientras los campos en EDITABLE_DATA están vacíos.
-       */
-      const PLACEHOLDER_NOTES = {
-        es: {
-          aguachilePrice: '[NOTA: Agregar precio de la tostada aquí]',
-          aguachilePortion: '[NOTA: Agregar tamaño o piezas por orden]',
-          aguachileNotes: '[NOTA: Agregar detalles de salsas, nivel de picante o extras aquí]',
-          frutasPrice: '[NOTA: Agregar precio del cóctel de frutas aquí]',
-          frutasSize: '[NOTA: Agregar tamaño del vasito, ej. 10 oz / 12 oz]',
-          frutasToppings: '[NOTA: Especificar toppings opcionales, ej. chamoy, chilito en polvo, limón]',
-          comboPrice: '[NOTA: Agregar precio especial del combo aquí]',
-          comboPromo: '[NOTA: Agregar qué incluye o descuento del combo aquí]',
-          eventDate: '[NOTA: Agregar fecha de venta o evento aquí]',
-          eventHours: '[NOTA: Agregar horario de atención aquí]',
-          eventLocation: '[NOTA: Agregar ubicación exacta, salón o stand aquí]',
-          contactHandle: '[NOTA: Agregar número de WhatsApp o usuario de Instagram de Programación 5]',
-        },
-        en: {
-          aguachilePrice: '[NOTE: Add tostada price here]',
-          aguachilePortion: '[NOTE: Add portion size or pieces per order]',
-          aguachileNotes: '[NOTE: Add salsa options, spice details, or extras here]',
-          frutasPrice: '[NOTE: Add fruit cocktail price here]',
-          frutasSize: '[NOTE: Add cup size, e.g., 10 oz / 12 oz]',
-          frutasToppings: '[NOTE: Specify optional toppings, e.g., chamoy, chili powder, lime]',
-          comboPrice: '[NOTE: Add special combo price here]',
-          comboPromo: '[NOTE: Add combo contents or savings promo here]',
-          eventDate: '[NOTE: Add sale or event date here]',
-          eventHours: '[NOTE: Add service hours here]',
-          eventLocation: '[NOTE: Add exact location, booth, or venue here]',
-          contactHandle: '[NOTE: Add WhatsApp number or Instagram handle for Programación 5]',
-        },
-      };
 
       /**
        * Diccionario completo de traducciones ES / EN para toda la interfaz.
@@ -1356,6 +1331,15 @@
             desc: 'Crujientes tostadas redondas preparadas al momento con camarón fresco marinado en jugo de limón, rodajas de pepino crujiente, cebolla morada y ese toque picosito de chile que despierta todos tus sentidos.',
             spiceLabel: 'NIVEL PICANTE:',
             spiceValue: '¡Toque picosito suave (2/4)!',
+            feat1Title: 'Camarón Fresco',
+            feat1Desc: 'Curado al momento en jugo de limón natural.',
+            feat2Title: 'Crunch Perfecto',
+            feat2Desc: 'Tostada redonda doradita y ultra crujiente.',
+            feat3Title: 'Sazón Artesanal',
+            feat3Desc: 'Toque suave de chile con cebolla morada y pepino.',
+            feat4Title: 'Montado al Instante',
+            feat4Desc: 'Preparado en tu orden para máxima textura.',
+            standBadge: '¡Pídela fresca en nuestro stand de Programación 5!',
           },
           frutas: {
             tag: 'DULCE & REFRESCANTE',
@@ -1364,12 +1348,25 @@
             desc: 'Una explosión natural de dulzura y frescura servida en nuestro práctico vasito blanco. Mezcla seleccionada de sandía jugosa, melón dulce y piña tropical cortados al día para refrescarte a cualquier hora.',
             freshLabel: 'FRESCURA:',
             freshValue: '100% Natural',
+            feat1Title: '100% Fruta Natural',
+            feat1Desc: 'Sandía jugosa, melón dulce y piña seleccionada.',
+            feat2Title: 'Vasito Portátil',
+            feat2Desc: 'Formato cómodo y listo para disfrutar donde vayas.',
+            feat3Title: 'Toppings al Gusto',
+            feat3Desc: 'Combínalo con chamoy, chilito en polvo y limón.',
+            feat4Title: 'Puro Refresco',
+            feat4Desc: 'Sin jarabes ni azúcar añadida, solo fruta fresca.',
+            standBadge: '¡El descanso más dulce y refrescante de tu día!',
           },
           combo: {
             badge: '★ EL FAVORITO',
             title: 'El Combo Perfecto',
             subtitle: '💥 ¡Lo mejor de dos mundos!',
             desc: '¿No sabes si elegir algo picosito o algo dulce? Llévate ambos en un solo paquete: el crunch fresco de nuestras Tostadas de Aguachile acompañado de la dulzura refrescante del Cóctel de Frutas.',
+            feat1Title: 'La Experiencia Completa',
+            feat1Desc: '1 Tostada de Aguachile + 1 Cóctel de Frutas. Lo salado y lo dulce en perfecta armonía.',
+            feat2Title: 'Paquete Favorito',
+            feat2Desc: 'El menú estrella de Programación 5. ¡Ahorra y disfruta ambos productos juntos!',
           },
           builder: {
             title: 'Vista Previa de tu Archivo .ZIP',
@@ -1475,6 +1472,15 @@
             desc: 'Crispy round tostadas prepared fresh to order with lime-cured shrimp, crisp cucumber slices, red onion, and that lively chili kick that wakes up your taste buds.',
             spiceLabel: 'SPICE LEVEL:',
             spiceValue: 'Mild spicy kick (2/4)!',
+            feat1Title: 'Fresh Lime-Cured Shrimp',
+            feat1Desc: 'Prepared fresh to order in natural lime juice.',
+            feat2Title: 'Irresistible Crunch',
+            feat2Desc: 'Golden, crispy round tostada base.',
+            feat3Title: 'House Recipe',
+            feat3Desc: 'Mild chili seasoning with red onion and cucumber.',
+            feat4Title: 'Made to Order',
+            feat4Desc: 'Crafted fresh on the spot for prime texture.',
+            standBadge: 'Get yours fresh at our Programación 5 booth!',
           },
           frutas: {
             tag: 'SWEET & REFRESHING',
@@ -1483,12 +1489,25 @@
             desc: 'A natural burst of sweetness and freshness served in our handy white cup. A handpicked mix of juicy watermelon, sweet cantaloupe melon, and tropical pineapple cut daily.',
             freshLabel: 'FRESHNESS:',
             freshValue: '100% Natural',
+            feat1Title: '100% Natural Fruit',
+            feat1Desc: 'Juicy watermelon, sweet melon, and sweet pineapple.',
+            feat2Title: 'Handy Cup',
+            feat2Desc: 'Easy-to-carry cup ready to enjoy anywhere.',
+            feat3Title: 'Toppings Your Way',
+            feat3Desc: 'Add fresh lime, chamoy, or chili powder as you like.',
+            feat4Title: 'Pure Hydration',
+            feat4Desc: 'No added sugars or syrups, just pure fresh fruit.',
+            standBadge: 'The sweetest and most refreshing break of your day!',
           },
           combo: {
             badge: '★ TOP PICK',
             title: 'The Perfect Combo',
             subtitle: '💥 The best of both worlds!',
             desc: 'Can’t decide between spicy or sweet? Get both in one bundle: the fresh crunch of our Aguachile Tostadas paired with the cooling sweetness of our Fruit Cocktail.',
+            feat1Title: 'The Complete Experience',
+            feat1Desc: '1 Aguachile Tostada + 1 Fruit Cocktail. Savory crunch and refreshing sweetness.',
+            feat2Title: 'Crowd Favorite',
+            feat2Desc: 'Programación 5 flagship bundle. Save and enjoy both products together!',
           },
           builder: {
             title: 'Your .ZIP File Preview',
@@ -1560,34 +1579,6 @@
         }
       }
 
-      /**
-       * Rellena los bloques editables con el valor real de EDITABLE_DATA o con la nota punteada bilingüe.
-       */
-      function renderEditableFields() {
-        const fields = document.querySelectorAll('[data-editable-field]');
-        fields.forEach((el) => {
-          const fieldKey = el.getAttribute('data-editable-field');
-          const box = document.querySelector(`[data-editable-box="${fieldKey}"]`);
-          const rawEntry = EDITABLE_DATA[fieldKey];
-
-          let value = '';
-          if (typeof rawEntry === 'string') {
-            value = rawEntry.trim();
-          } else if (rawEntry && typeof rawEntry === 'object') {
-            value = (rawEntry[currentLang] || rawEntry.es || rawEntry.en || '').trim();
-          }
-
-          if (value) {
-            el.textContent = value;
-            el.classList.remove('italic', 'text-berry/90');
-            if (box) box.classList.add('filled');
-          } else {
-            el.textContent = PLACEHOLDER_NOTES[currentLang][fieldKey] || '[NOTA]';
-            el.classList.add('italic', 'text-berry/90');
-            if (box) box.classList.remove('filled');
-          }
-        });
-      }
 
       /**
        * Actualiza la vista previa interactiva del archivo .ZIP (Aguachile, Frutas o Combo).
@@ -1645,17 +1636,11 @@
               const key = el.getAttribute('data-i18n');
               const translated = getNestedTranslation(currentLang, key);
               if (translated !== null) {
-                // Solo el aviso de edición contiene formato inline seguro (<strong>, <code>)
-                if (key === 'details.editorTip') {
-                  el.innerHTML = translated;
-                } else {
-                  el.textContent = translated;
-                }
+                el.textContent = translated;
               }
             });
 
-            // Actualizar campos editables y vista previa del combo
-            renderEditableFields();
+            // Actualizar vista previa del combo
             renderPackPreview();
 
             // Preservar textos si el contenido ya fue descomprimido
